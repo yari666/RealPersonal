@@ -11,8 +11,6 @@ export default {
 </script>
 
 <style lang="less">
-@import "./assets/css/element.less";
-
 #app {
     font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
         "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
@@ -27,29 +25,11 @@ export default {
 .fr {
     float: right;
 }
-.el-table {
-    font-size: 12px;
-    td,
-    th {
-        padding: 10px 0;
-    }
+.overflow {
+    overflow: hidden;
 }
-
-.el-pager li {
-    background: transparent !important;
-}
-.el-pagination .btn-next,
-.el-pagination .btn-prev {
-    background: transparent !important;
-}
-
-.search-box {
-    position: relative;
-    background: #fff;
-    padding: 15px 10px;
-    margin-bottom: 10px;
-    height: 40px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 14px rgba(0, 0, 0, 0.04);
+.pagination {
+    float: right;
+    margin-top: 10px;
 }
 </style>

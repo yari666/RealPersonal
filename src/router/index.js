@@ -7,128 +7,142 @@ import login from "~/pages/login"
 import Home from "~/pages/home"
 import Index from "~/pages/index"
 
-// 平台
-import User from "~/pages/sys/user/user";
-import Role from "~/pages/sys/role/role";
-import Menu from "~/pages/sys/menu/menu";
-import Dictionary from "~/pages/sys/dictionary/dictionary";
+// 访客管理
+import GuestUser from '~/pages/guest/guest-user/index';   //人员管理
+import GuestClass from '~/pages/guest/guest-class/index';  //班组管理
 
-// 监管
-import jgwsz from '~/pages/jianguan/wushuizhan/index'  //污水站管理
-import jsyz from '~/pages/jianguan/yezhu/index' //业主管理
+import Maganer from '~/pages/user/manager/index';
+import MaganerDetail from '~/pages/user/manager/detail/index';
 
-// 业主
-import yzxm from '~/pages/yezhu/xiangmu/index'  //项目管理
-import yzwsz from '~/pages/yezhu/wushuizhan/index'  //污水站管理
-import yzsb from '~/pages/yezhu/shebei/index'  //设备管理
-import yzyw from '~/pages/yezhu/yunwei/index'  //运维管理
+import Worker from '~/pages/user/worker/index';
+import WorkerDetail from '~/pages/user/worker/detail/index';
 
-// 运维
-import ywyz from '~/pages/yunwei/yezhu/index'  //业主管理
-import ywwsz from '~/pages/yunwei/wushuizhan/index'  //污水站管理
-import ywsb from '~/pages/yunwei/shebei/index'  //设备管理
+import Project from '~/pages/project/index';
+import Company from '~/pages/company/index';
 
-// import menuList from "./menulist.js"
+import WorkcheckUser from '~/pages/workcheck/user/index';  //人员考勤
+import WorkcheckClockin from '~/pages/workcheck/clockin/index';
+import WorkcheckReportform from '~/pages/workcheck/reportform/index';
+
+import Device from '~/pages/device/index'
+import Api from '~/pages/api/index'
+import Operation from '~/pages/operation/index'
+
+import Menu from '~/pages/sys/menu/index'
+import Role from '~/pages/sys/role/index'
+import Account from '~/pages/sys/account/index'
 
 
 Vue.use(Router)
 
 const routes = [
     {
-        // 首页-控制台
         path: '/',
         name: 'Home',
         component: Home,
         children: [
+
+            // 首页
             {
-                // 控制台
                 path: '/',
                 name: 'Index',
                 component: Index
             },
-
+            // 项目管理
             {
-                // 平台-用户管理
-                path: "/sys/user/user",
-                name: "User",
-                component: User,
+                path: '/project',
+                name: 'Project',
+                component: Project
+            },
+            // 企业管理
+            {
+                path: '/company',
+                name: 'Company',
+                component: Company
+            },
+            // 人员管理
+            {
+                path: '/user/manager',
+                name: 'Maganer',
+                component: Maganer
             },
             {
-                // 平台-角色管理
-                path: "/sys/role/role",
-                name: "Role",
-                component: Role,
+                path: '/user/managerdetail',
+                name: 'MaganerDetail',
+                component: MaganerDetail
             },
             {
-                // 平台-菜单管理
-                path: "/sys/menu/menu",
-                name: "Menu",
-                component: Menu,
+                path: '/user/worker',
+                name: 'Worker',
+                component: Worker
             },
             {
-                // 平台-字典管理
-                path: "/sys/dictionary/dictionary",
-                name: "Dictionary",
-                component: Dictionary,
+                path: '/user/workerdetail',
+                name: 'WorkerDetail',
+                component: WorkerDetail
             },
-
+            // 访客管理
             {
-                // 监管-污水站
-                path: '/jianguan/wushuizhan',
-                name: 'jgwsz',
-                component: jgwsz
+                path: '/guest/guestuser',
+                name: 'GuestUser',
+                component: GuestUser
             },
             {
-                // 监管-业主数据
-                path: '/jianguan/yezhu',
-                name: 'jsyz',
-                component: jsyz
+                path: '/guest/guestclass',
+                name: 'GuestClass',
+                component: GuestClass
             },
-
-
+            //考勤管理
             {
-                // 业主-项目管理
-                path: '/yezhu/xiangmu',
-                name: 'yzxm',
-                component: yzxm
+                path: '/workcheck/user',
+                name: 'WorkcheckUser',
+                component: WorkcheckUser
             },
             {
-                // 业主-污水站管理
-                path: '/yezhu/wushuizhan',
-                name: 'yzwsz',
-                component: yzwsz
+                path: '/workcheck/clockin',
+                name: 'WorkcheckClockin',
+                component: WorkcheckClockin
             },
             {
-                // 业主-设备管理
-                path: '/yezhu/shebei',
-                name: 'yzsb',
-                component: yzsb
+                path: '/workcheck/reportform',
+                name: 'WorkcheckReportform',
+                component: WorkcheckReportform
             },
             {
-                // 业主-运维管理-第三方管理
-                path: '/yezhu/yunwei/third',
-                name: 'yzyw',
-                component: yzyw
-            },
-
-
-            {
-                // 运维-我的业主方
-                path: '/yunwei/yezhu',
-                name: 'ywyz',
-                component: ywyz
+                path: '/device',
+                name: 'Device',
+                component: Device
             },
             {
-                // 运维-运维污水站
-                path: '/yunwei/wushuizhan',
-                name: 'ywwsz',
-                component: ywwsz
+                path: '/api',
+                name: 'Api',
+                component: Api
             },
             {
-                // 运维-运维设备
-                path: '/yunwei/shebei',
-                name: 'ywsb',
-                component: ywsb
+                path: '/userdata',
+                name: 'Api',
+                component: Api
+            },
+            {
+                path: '/operation',
+                name: 'Operation',
+                component: Operation
+            },
+            // 账号管理
+            {
+                path: '/sys/menu',
+                name: 'Menu',
+                component: Menu
+            },
+            {
+                path: '/sys/role',
+                name: 'Role',
+                component: Role
+            },
+            {
+                path: '/sys/account',
+                name: 'Account',
+                component: Account
             },
         ]
     },
@@ -138,87 +152,6 @@ const routes = [
         name: 'Login',
         component: login
     },
-
-    // // 业主方
-    // {
-    //     path: '/yezhu',
-    //     name: 'Index',
-    //     component: Index,
-    //     children: [
-    //         {
-    //             // 业主-项目管理
-    //             path: '/yezhu/xiangmu',
-    //             name: 'yzxm',
-    //             component: yzxm
-    //         },
-    //         {
-    //             // 业主-污水站管理
-    //             path: '/yezhu/wushuizhan',
-    //             name: 'yzwsz',
-    //             component: yzwsz
-    //         },
-    //         {
-    //             // 业主-设备管理
-    //             path: '/yezhu/shebei',
-    //             name: 'yzsb',
-    //             component: yzsb
-    //         },
-    //         {
-    //             // 业主-运维管理-第三方管理
-    //             path: '/yezhu/yunwei/third',
-    //             name: 'yzyw',
-    //             component: yzyw
-    //         },
-    //     ]
-    // },
-
-    // // 运维方
-    // {
-    //     path: '/yunwei',
-    //     name: 'Index',
-    //     component: Index,
-    //     children: [
-    //         {
-    //             // 运维-我的业主方
-    //             path: '/yunwei/yezhu',
-    //             name: 'ywyz',
-    //             component: ywyz
-    //         },
-    //         {
-    //             // 运维-运维污水站
-    //             path: '/yunwei/wushuizhan',
-    //             name: 'ywwsz',
-    //             component: ywwsz
-    //         },
-    //         {
-    //             // 运维-运维设备
-    //             path: '/yunwei/shebei',
-    //             name: 'ywsb',
-    //             component: ywsb
-    //         },
-    //     ]
-    // },
-
-    // // 监管方
-    // {
-    //     path: '/jianguan',
-    //     name: 'Index',
-    //     component: Index,
-    //     children: [
-    //         {
-    //             // 监管-污水站
-    //             path: '/jianguan/wushuizhan',
-    //             name: 'jgwsz',
-    //             component: jgwsz
-    //         },
-    //         {
-    //             // 监管-业主数据
-    //             path: '/jianguan/yezhu',
-    //             name: 'jsyz',
-    //             component: jsyz
-    //         },
-    //     ]
-    // }
 ];
 
 
@@ -235,14 +168,14 @@ router.beforeEach((to, from, next) => {
     // next 是一个函数，表示方行
     // next() 放行    next(/login) 强行跳转
 
-    if (to.path === '/login') {
-        return next()
-    }
+    // if (to.path === '/login') {
+    //     return next()
+    // }
 
-    const token = window.localStorage.getItem('token')
-    if (!token) {
-        return next('/login')
-    }
+    // const token = window.localStorage.getItem('token')
+    // if (!token) {
+    //     return next('/login')
+    // }
 
 
 

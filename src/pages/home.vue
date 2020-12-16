@@ -7,163 +7,105 @@
 
             <!-- 导航 -->
             <el-menu
-                color="#6F80A7"
                 :default-active="$route.path"
                 @select="handleSelect"
+                background-color="transparent"
+                text-color="#fff"
+                active-text-color="#ffd04b"
+                router="true"
             >
-                <el-menu-item index="/">
-                    <span slot="title"
-                        ><router-link to="/">控制台</router-link></span
-                    >
+                <el-menu-item index="1">
+                    <i class="el-icon-house"></i>
+                    <span slot="title">首页</span>
                 </el-menu-item>
 
-                <!-- 业主 -->
-                <template v-if="userType == 1">
-                    <el-menu-item index="/yezhu/xiangmu">
-                        <span slot="title"
-                            ><router-link to="/yezhu/xiangmu"
-                                >项目管理</router-link
-                            ></span
-                        >
-                    </el-menu-item>
-                    <el-menu-item index="/yezhu/wushuizhan">
-                        <span slot="title"
-                            ><router-link to="/yezhu/wushuizhan"
-                                >污水站管理</router-link
-                            ></span
-                        >
-                    </el-menu-item>
-                    <el-menu-item index="/yezhu/shebei">
-                        <span slot="title"
-                            ><router-link to="/yezhu/shebei"
-                                >设备管理</router-link
-                            ></span
-                        >
-                    </el-menu-item>
-                    <el-submenu index="/yezhu/yunwei/third">
-                        <span class="title" slot="title">运维管理</span>
-                        <el-menu-item-group>
-                            <el-menu-item index="/yezhu/yunwei/third">
-                                <span slot="title"
-                                    ><router-link to="/yezhu/yunwei/third"
-                                        >第三方运维</router-link
-                                    ></span
-                                ></el-menu-item
-                            >
-                        </el-menu-item-group>
-                    </el-submenu>
-                </template>
+                <el-menu-item index="/project">
+                    <i class="el-icon-set-up"></i>
+                    <span slot="title">项目管理</span>
+                </el-menu-item>
 
-                <!-- 运维 -->
-                <template v-else-if="userType == 2">
-                    <el-menu-item index="/yunwei/yezhu"
-                        ><span slot="title"
-                            ><router-link to="/yunwei/yezhu"
-                                >业主管理</router-link
-                            ></span
-                        >
-                    </el-menu-item>
-                    <el-menu-item index="/yunwei/wushuizhan"
-                        ><span slot="title"
-                            ><router-link to="/yunwei/wushuizhan"
-                                >污水站管理</router-link
-                            ></span
-                        >
-                    </el-menu-item>
-                    <el-menu-item index="/yunwei/shebei"
-                        ><span slot="title"
-                            ><router-link to="/yunwei/shebei"
-                                >设备管理</router-link
-                            ></span
-                        >
-                    </el-menu-item>
-                </template>
+                <el-menu-item index="/company">
+                    <i class="el-icon-office-building"></i>
+                    <span slot="title">企业管理</span>
+                </el-menu-item>
 
-                <!-- 监管 -->
-                <template v-else-if="userType == 3">
-                    <el-menu-item index="/jianguan/wushuizhan">
-                        <span slot="title"
-                            ><router-link to="/jianguan/wushuizhan"
-                                >污水站管理</router-link
-                            ></span
-                        >
-                    </el-menu-item>
-                    <el-menu-item index="/jianguan/yezhu">
-                        <span slot="title"
-                            ><router-link to="/jianguan/yezhu"
-                                >业主管理</router-link
-                            ></span
-                        >
-                    </el-menu-item>
-                </template>
+                <el-submenu index="4">
+                    <template slot="title">
+                        <i class="el-icon-user"></i>
+                        <span>人员管理</span>
+                    </template>
+                    <el-menu-item index="/user/manager">管理人员</el-menu-item>
+                    <el-menu-item index="/user/worker">普通人员</el-menu-item>
+                </el-submenu>
 
-                <!-- 平台 -->
-                <template v-else-if="userType == 4">
-                    <el-menu-item index="/sys/user/user">
-                        <span slot="title"
-                            ><router-link to="/sys/user/user"
-                                >账户管理</router-link
-                            ></span
-                        >
-                    </el-menu-item>
-                    <el-menu-item index="/sys/role/role">
-                        <span slot="title"
-                            ><router-link to="/sys/role/role"
-                                >角色管理</router-link
-                            ></span
-                        >
-                    </el-menu-item>
-                    <el-menu-item index="/sys/menu/menu">
-                        <span slot="title"
-                            ><router-link to="/sys/menu/menu"
-                                >菜单管理</router-link
-                            ></span
-                        >
-                    </el-menu-item>
-                    <el-menu-item index="/sys/dictionary/dictionary">
-                        <span slot="title"
-                            ><router-link to="/sys/dictionary/dictionary"
-                                >字典管理</router-link
-                            ></span
-                        >
-                    </el-menu-item>
-                </template>
+                <el-submenu index="5">
+                    <template slot="title">
+                        <i class="el-icon-phone-outline"></i>
+                        <span>访客管理</span>
+                    </template>
+
+                    <el-menu-item index="/guest/guestuser"
+                        >访客列表</el-menu-item
+                    >
+                    <el-menu-item index="/guest/guestclass"
+                        >班组管理</el-menu-item
+                    >
+                </el-submenu>
+
+                <el-submenu index="6">
+                    <template slot="title">
+                        <i class="el-icon-bell"></i>
+                        <span>考勤管理</span>
+                    </template>
+
+                    <el-menu-item index="/workcheck/clockin"
+                        >打卡记录</el-menu-item
+                    >
+                    <el-menu-item index="/workcheck/user"
+                        >人员考勤</el-menu-item
+                    >
+                    <el-menu-item index="/workcheck/reportform"
+                        >考勤日报表</el-menu-item
+                    >
+                </el-submenu>
+
+                <el-menu-item index="/device">
+                    <i class="el-icon-video-camera"></i>
+                    <span slot="title">设备管理</span>
+                </el-menu-item>
+
+                <el-menu-item index="/api">
+                    <i class="el-icon-paperclip"></i>
+                    <span slot="title">API管理</span>
+                </el-menu-item>
+
+                <el-menu-item index="/userdata">
+                    <i class="el-icon-user"></i>
+                    <span slot="title">人员库</span>
+                </el-menu-item>
+
+                <el-menu-item index="/operation">
+                    <i class="el-icon-setting"></i>
+                    <span slot="title">操作日志</span>
+                </el-menu-item>
+
+                <el-submenu index="11">
+                    <template slot="title">
+                        <i class="el-icon-user"></i>
+                        <span>账户管理</span>
+                    </template>
+
+                    <el-menu-item index="/sys/account">账号管理</el-menu-item>
+                    <el-menu-item index="/sys/role">角色管理</el-menu-item>
+                    <el-menu-item index="/sys/menu">菜单管理</el-menu-item>
+                </el-submenu>
             </el-menu>
         </el-aside>
 
         <el-container>
             <!---顶部----->
             <el-header style="height: 68px">
-                <div class="fl">
-                    {{
-                        userType == 1
-                            ? "业主方"
-                            : userType == 2
-                            ? "运维方"
-                            : userType == 3
-                            ? "监管方"
-                            : userType == 4
-                            ? "平台"
-                            : ""
-                    }}
-                </div>
-
                 <div class="fr">
-                    <div class="company fl">
-                        <div class="block">
-                            <el-cascader
-                                placeholder="请选择区域"
-                                :options="areaData"
-                                :props="{
-                                    label: 'Value',
-                                    children: 'Children',
-                                    value: 'Value',
-                                    checkStrictly: true,
-                                }"
-                                @change="changeArea"
-                            ></el-cascader>
-                        </div>
-                    </div>
                     <div class="weather fl">
                         <i class="el-icon-sunny"></i>晴 24℃
                     </div>
@@ -213,7 +155,11 @@
 
             <!---主内容----->
             <el-main>
-                <router-view></router-view>
+                <div class="main">
+                    <keep-alive>
+                        <router-view></router-view>
+                    </keep-alive>
+                </div>
             </el-main>
         </el-container>
     </el-container>
@@ -452,98 +398,25 @@ export default {
     }
 }
 
-.el-aside {
-    background: linear-gradient(153deg, #23283c 0%, #2a355a 100%);
-    box-shadow: 3px 3px 14px rgba(0, 0, 0, 0.16);
-    font-size: 14px;
+.el-menu {
+    border: none;
 }
+
 .logo {
-    background: url(../assets/img/logo.png) no-repeat;
+    background: url(../assets/img/logo.svg) no-repeat;
     background-size: contain;
     width: 170px;
     height: 48px;
     margin: 16px 25px;
 }
 
-.el-menu-item:focus,
-.el-menu-item:hover,
-.el-submenu__title:focus,
-.el-submenu__title:hover {
-    background-color: #48596f;
-}
-
-.el-menu {
-    background-color: transparent;
-    border: none;
-    .el-menu-item {
-        height: 50px;
-        line-height: 50px;
-        span.title {
-            color: #6f80a7;
-            padding-left: 20px;
-        }
-        a {
-            display: block;
-            width: 100%;
-            height: 100%;
-            color: #6f80a7;
-            text-decoration: none;
-            padding-left: 20px;
-        }
-        &:hover,
-        &:focus,
-        &.is-active {
-            a {
-                color: #fff;
-            }
-
-            border-left: 2px solid #10c2de;
-            background: linear-gradient(
-                91deg,
-                rgba(8, 153, 175, 0.27) 0%,
-                rgba(0, 55, 64, 0.09) 58%,
-                rgba(3, 15, 29, 0) 100%
-            );
-        }
-    }
-
-    .el-submenu {
-        height: 50px;
-        line-height: 50px;
-        span.title {
-            color: #6f80a7;
-            padding-left: 20px;
-        }
-        a {
-            display: block;
-            width: 100%;
-            height: 100%;
-            color: #6f80a7;
-            text-decoration: none;
-            padding-left: 20px;
-        }
-        .el-menu-item {
-            &:hover,
-            &:focus,
-            &.is-active {
-                a {
-                    color: #fff;
-                }
-
-                border-left: 2px solid #10c2de;
-                background: linear-gradient(
-                    91deg,
-                    rgba(8, 153, 175, 0.27) 0%,
-                    rgba(0, 55, 64, 0.09) 58%,
-                    rgba(3, 15, 29, 0) 100%
-                );
-            }
-        }
-    }
-}
 .el-main {
-    background: #f9f9f9;
-    padding: 4px;
+    background: #f6f6f6;
+}
+.main {
+    background: #fff;
+    padding: 20px 24px 24px;
+    overflow: hidden;
 }
 .p20 {
     padding: 20px;
