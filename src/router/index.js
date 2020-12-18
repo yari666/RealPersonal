@@ -1,40 +1,6 @@
 import Vue from "vue"
 import Router from "vue-router"
 
-import login from "~/pages/login"
-
-// 首页
-import Home from "~/pages/home"
-import Index from "~/pages/index"
-
-// 访客管理
-import GuestUser from '~/pages/guest/guest-user/index';   //人员管理
-import GuestClass from '~/pages/guest/guest-class/index';  //班组管理
-
-import Maganer from '~/pages/user/manager/index';
-import MaganerDetail from '~/pages/user/manager/detail/index';
-
-import Worker from '~/pages/user/worker/index';
-import WorkerDetail from '~/pages/user/worker/detail/index';
-
-import Project from '~/pages/project/index';
-import Company from '~/pages/company/index';
-
-import WorkcheckUser from '~/pages/workcheck/user/index';  //人员考勤
-import WorkcheckClockin from '~/pages/workcheck/clockin/index';
-import WorkcheckReportform from '~/pages/workcheck/reportform/index';
-
-import Device from '~/pages/device/index'
-import Api from '~/pages/api/index'
-import Operation from '~/pages/operation/index'
-
-import Menu from '~/pages/sys/menu/index'
-import Role from '~/pages/sys/role/index'
-import Account from '~/pages/sys/account/index'
-import WorkType from '~/pages/sys/worktype/index'
-
-import Userdata from '~/pages/userdata/index'
-
 
 Vue.use(Router)
 
@@ -42,117 +8,119 @@ const routes = [
     {
         path: '/',
         name: 'Home',
-        component: Home,
+        component: () => import('~/pages/home'),
         children: [
 
             // 首页
             {
                 path: '/',
                 name: 'Index',
-                component: Index
+                component: () => import('~/pages/index'),
             },
             // 项目管理
             {
                 path: '/project',
                 name: 'Project',
-                component: Project
+                component: () => import('~/pages/project/index'),
             },
             // 企业管理
             {
                 path: '/company',
                 name: 'Company',
-                component: Company
+                component: () => import('~/pages/company/index'),
             },
             // 人员管理
             {
                 path: '/user/manager',
                 name: 'Maganer',
-                component: Maganer
+                component: () => import('~/pages/user/manager/index'),
             },
             {
                 path: '/user/managerdetail',
                 name: 'MaganerDetail',
-                component: MaganerDetail
+                component: () => import('~/pages/user/manager/detail/index'),
             },
             {
                 path: '/user/worker',
                 name: 'Worker',
-                component: Worker
+                component: () => import('~/pages/user/worker/index'),
             },
             {
                 path: '/user/workerdetail',
                 name: 'WorkerDetail',
-                component: WorkerDetail
+                component: () => import('~/pages/user/worker/detail/index'),
             },
             // 访客管理
             {
                 path: '/guest/guestuser',
                 name: 'GuestUser',
-                component: GuestUser
+                component: () => import('~/pages/guest/guest-user/index'),
             },
             {
                 path: '/guest/guestclass',
                 name: 'GuestClass',
-                component: GuestClass
+                component: () => import('~/pages/guest/guest-class/index'),
             },
             //考勤管理
             {
                 path: '/workcheck/user',
                 name: 'WorkcheckUser',
-                component: WorkcheckUser
+                component: () => import('~/pages/workcheck/user/index'),
             },
             {
                 path: '/workcheck/clockin',
                 name: 'WorkcheckClockin',
-                component: WorkcheckClockin
+                component: () => import('~/pages/workcheck/clockin/index'),
             },
             {
                 path: '/workcheck/reportform',
                 name: 'WorkcheckReportform',
-                component: WorkcheckReportform
+                component: () => import('~/pages/workcheck/reportform/index'),
             },
+            // 设备管理
             {
                 path: '/device',
                 name: 'Device',
-                component: Device
+                component: () => import('~/pages/device/index'),
             },
+            // api管理
             {
                 path: '/api',
                 name: 'Api',
-                component: Api
+                component: () => import('~/pages/api/index'),
             },
             // 人员库
             {
                 path: '/userdata',
                 name: 'Userdata',
-                component: Userdata
+                component: () => import('~/pages/userdata/index'),
             },
+            // 操作日志
             {
                 path: '/operation',
                 name: 'Operation',
-                component: Operation
+                component: () => import('~/pages/operation/index'),
             },
             // 账号管理
             {
                 path: '/sys/menu',
                 name: 'Menu',
-                component: Menu
+                component: () => import('~/pages/sys/menu/index'),
             },
             {
                 path: '/sys/role',
                 name: 'Role',
-                component: Role
+                component: () => import('~/pages/sys/role/index'),
             },
             {
                 path: '/sys/account',
                 name: 'Account',
-                component: Account
+                component: () => import('~/pages/sys/account/index'),
             },
             {
                 path: '/sys/worktype',
                 name: 'WorkType',
-                component: WorkType
-
+                component: () => import('~/pages/sys/worktype/index'),
             }
 
         ]
@@ -161,7 +129,7 @@ const routes = [
     {
         path: '/login',
         name: 'Login',
-        component: login
+        component: () => import('~/pages/login')
     },
 ];
 
