@@ -31,6 +31,9 @@ import Operation from '~/pages/operation/index'
 import Menu from '~/pages/sys/menu/index'
 import Role from '~/pages/sys/role/index'
 import Account from '~/pages/sys/account/index'
+import WorkType from '~/pages/sys/worktype/index'
+
+import Userdata from '~/pages/userdata/index'
 
 
 Vue.use(Router)
@@ -118,10 +121,11 @@ const routes = [
                 name: 'Api',
                 component: Api
             },
+            // 人员库
             {
                 path: '/userdata',
-                name: 'Api',
-                component: Api
+                name: 'Userdata',
+                component: Userdata
             },
             {
                 path: '/operation',
@@ -144,6 +148,13 @@ const routes = [
                 name: 'Account',
                 component: Account
             },
+            {
+                path: '/sys/worktype',
+                name: 'WorkType',
+                component: WorkType
+
+            }
+
         ]
     },
     // 登录

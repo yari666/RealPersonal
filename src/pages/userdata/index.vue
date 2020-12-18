@@ -34,7 +34,7 @@
             </el-table-column>
             <el-table-column prop="name" label="所属项目"> </el-table-column>
             <el-table-column prop="name" label="时间"> </el-table-column>
-            <el-table-column prop="address" label="操作">
+            <el-table-column prop="address" label="操作" width="220">
                 <template>
                     <el-button
                         type="primary"
@@ -43,6 +43,8 @@
                         plain
                         >查看</el-button
                     >
+                    <el-button type="primary" size="small">编辑</el-button>
+                    <el-button type="danger" size="small">删除</el-button>
                 </template></el-table-column
             >
         </el-table>
@@ -53,6 +55,7 @@
             title="企业详情"
             :visible.sync="showAdd"
             v-if="showAdd"
+            class="dialog"
         >
             <add></add>
         </el-dialog>
@@ -60,7 +63,7 @@
 </template>
 
 <script>
-import add from "./add";
+import add from "./add/index";
 
 export default {
     data() {

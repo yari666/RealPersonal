@@ -98,6 +98,9 @@
                     <el-menu-item index="/sys/account">账号管理</el-menu-item>
                     <el-menu-item index="/sys/role">角色管理</el-menu-item>
                     <el-menu-item index="/sys/menu">菜单管理</el-menu-item>
+                    <el-menu-item index="/sys/worktype"
+                        >工种/证书字典</el-menu-item
+                    >
                 </el-submenu>
             </el-menu>
         </el-aside>

@@ -1,9 +1,9 @@
 <template>
     <el-form ref="form" :model="form" label-width="160px">
-        <el-form-item label="账号/手机号">
+        <el-form-item label="账号">
             <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="真实姓名">
+        <el-form-item label="姓名">
             <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="角色">
@@ -12,10 +12,7 @@
                 <el-option label="进场" value="beijing"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="开通时间">
-            <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="到期时间">
+        <el-form-item label="是否激活">
             <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item>

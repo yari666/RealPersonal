@@ -2,8 +2,8 @@
     <div>
         <div class="search-box">
             <el-form :inline="true" class="demo-form-inline fl">
-                <el-form-item label="关键吃">
-                    <el-input placeholder="序号"></el-input>
+                <el-form-item label="工种名称">
+                    <el-input placeholder="工种名称"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary">查询</el-button>
@@ -11,7 +11,7 @@
             </el-form>
 
             <div class="fr">
-                <el-button type="primary" @click="addClass('edit')"
+                <el-button type="primary" @click="addClass('add')"
                     >添加</el-button
                 >
                 <el-button type="primary">导出</el-button>
@@ -19,18 +19,15 @@
         </div>
 
         <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="date" label="序号"> </el-table-column>
-            <el-table-column prop="name" label="菜单编号"> </el-table-column>
-            <el-table-column prop="name" label="菜单名称"> </el-table-column>
-            <el-table-column prop="name" label="菜单URL"> </el-table-column>
-            <el-table-column prop="date" label="是否激活"> </el-table-column>
-            <el-table-column prop="address" label="菜单图标"> </el-table-column>
+            <el-table-column prop="date" label="工种编号"> </el-table-column>
+            <el-table-column prop="name" label="工种名称"> </el-table-column>
             <el-table-column prop="address" label="操作">
                 <el-button type="primary" size="small" @click="addClass('edit')"
                     >编辑</el-button
-                >
-                <el-button type="danger" size="small">删除</el-button>
-            </el-table-column>
+                ><el-button type="danger" size="small"
+                    >删除</el-button
+                ></el-table-column
+            >
         </el-table>
 
         <!-- 弹框内容 -->

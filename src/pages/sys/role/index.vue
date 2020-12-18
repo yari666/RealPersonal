@@ -2,8 +2,8 @@
     <div>
         <div class="search-box">
             <el-form :inline="true" class="demo-form-inline fl">
-                <el-form-item label="关键吃">
-                    <el-input placeholder="序号"></el-input>
+                <el-form-item label="关键词">
+                    <el-input placeholder="关键词"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary">查询</el-button>
@@ -11,7 +11,9 @@
             </el-form>
 
             <div class="fr">
-                <el-button type="primary">添加</el-button>
+                <el-button type="primary" @click="addClass('edit')"
+                    >添加</el-button
+                >
                 <el-button type="primary">导出</el-button>
             </div>
         </div>
@@ -26,7 +28,9 @@
                 <el-button type="primary" size="small" @click="addClass('edit')"
                     >编辑</el-button
                 >
-                <el-button type="warning" size="small">关联项目</el-button>
+                <el-button type="warning" size="small" @click="relationRole()"
+                    >关联项目</el-button
+                >
                 <el-button type="danger" size="small">删除</el-button>
             </el-table-column>
         </el-table>
@@ -34,23 +38,35 @@
         <!-- 弹框内容 -->
         <el-dialog
             :close-on-click-modal="false"
-            title="企业详情"
+            title="添加用户"
             :visible.sync="showAdd"
             v-if="showAdd"
+            class="dialog"
         >
             <add></add>
+        </el-dialog>
+
+        <el-dialog
+            :close-on-click-modal="false"
+            title="关联用户"
+            :visible.sync="showRelation"
+            v-if="showRelation"
+        >
+            <relation></relation>
         </el-dialog>
     </div>
 </template>
 
 <script>
-import add from "./add";
+import add from "./add/index";
+import relation from "./relation";
 
 export default {
     data() {
         return {
             openType: "add",
             showAdd: false,
+            showRelation: false,
             tableData: [
                 {
                     date: "2016-05-02",
@@ -75,11 +91,14 @@ export default {
             ],
         };
     },
-    components: { add },
+    components: { add, relation },
     methods: {
         addClass(type) {
             this.openType = type;
             this.showAdd = true;
+        },
+        relationRole() {
+            this.showRelation = true;
         },
     },
 };
