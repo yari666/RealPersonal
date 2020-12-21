@@ -13,7 +13,7 @@ const routes = [
 
             // 首页
             {
-                path: '/',
+                path: '/home',
                 name: 'Index',
                 component: () => import('~/pages/index'),
             },

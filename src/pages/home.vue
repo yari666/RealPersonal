@@ -14,7 +14,7 @@
                 active-text-color="#ffd04b"
                 router="true"
             >
-                <el-menu-item index="1">
+                <el-menu-item index="/home">
                     <i class="el-icon-house"></i>
                     <span slot="title">首页</span>
                 </el-menu-item>
