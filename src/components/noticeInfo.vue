@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import { GetNoticeInfo } from "~/config/api.js";
 const timestamp = require("time-stamp");
 
 export default {

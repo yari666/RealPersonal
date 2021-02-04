@@ -6,14 +6,39 @@
             <div class="logo"></div>
 
             <!-- 导航 -->
+
             <el-menu
-                :default-active="$route.path"
+                :default-active="path"
                 @select="handleSelect"
                 background-color="transparent"
                 text-color="#fff"
                 active-text-color="#ffd04b"
-                router="true"
+                router
+                unique-opened
             >
+                <el-submenu
+                    v-if="menuList.length"
+                    :index="item.menuCode"
+                    v-for="item in menuList"
+                    :key="item.menuCode"
+                >
+                    <template slot="title">
+                        <i :class="'el-icon-' + item.menuIcon"></i>
+                        <span>{{ item.menuName }}</span>
+                    </template>
+
+                    <el-menu-item
+                        :index="subItem.menuUrl"
+                        v-for="subItem in item.menuList"
+                        :key="subItem.menuUrl"
+                    >
+                        <template slot="title">
+                            <i :class="'el-icon-' + subItem.menuIcon"></i>
+                            <span>{{ subItem.menuName }}</span>
+                        </template>
+                    </el-menu-item>
+                </el-submenu>
+
                 <el-menu-item index="/home">
                     <i class="el-icon-house"></i>
                     <span slot="title">首页</span>
@@ -29,7 +54,7 @@
                     <span slot="title">企业管理</span>
                 </el-menu-item>
 
-                <el-submenu index="4">
+                <el-submenu index="/user">
                     <template slot="title">
                         <i class="el-icon-user"></i>
                         <span>人员管理</span>
@@ -38,7 +63,7 @@
                     <el-menu-item index="/user/worker">普通人员</el-menu-item>
                 </el-submenu>
 
-                <el-submenu index="5">
+                <el-submenu index="/guest">
                     <template slot="title">
                         <i class="el-icon-phone-outline"></i>
                         <span>访客管理</span>
@@ -52,7 +77,7 @@
                     >
                 </el-submenu>
 
-                <el-submenu index="6">
+                <el-submenu index="/workcheck">
                     <template slot="title">
                         <i class="el-icon-bell"></i>
                         <span>考勤管理</span>
@@ -117,13 +142,10 @@
                             :size="24"
                             src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
                         ></el-avatar>
-                        {{ this.$store.state.userInfo.userName }}
+                        {{ this.$store.state.userName }}
                     </div>
 
                     <div class="email fl"><i class="icons"></i></div>
-                    <div class="ksh fl" @click="goKsh">
-                        <i class="icons"></i>
-                    </div>
 
                     <!-- 退出 -->
                     <el-dropdown trigger="click" @command="handleCommand">
@@ -160,7 +182,7 @@
             <el-main>
                 <div class="main">
                     <keep-alive>
-                        <router-view></router-view>
+                        <router-view :key="this.$route.fullPath"></router-view>
                     </keep-alive>
                 </div>
             </el-main>
@@ -170,118 +192,40 @@
 
 
 <script>
-import { Menu, AreaList } from "~/config/api.js";
 import revisePassword from "~/components/revisePassword";
+import { get } from "~/config/fetch.js";
 
 export default {
     data() {
         return {
-            activeIndex: "5-1",
             showRevisePassword: false,
             menuList: [],
-
-            areaData: [],
-
-            areaVal: [],
-            options: [
-                {
-                    value: "zhinan",
-                    label: "陕西省",
-                    children: [
-                        {
-                            value: "shejiyuanze",
-                            label: "设计原则",
-                            children: [
-                                {
-                                    value: "yizhi",
-                                    label: "一致",
-                                },
-                            ],
-                        },
-                        {
-                            value: "daohang",
-                            label: "安康市",
-                            children: [
-                                {
-                                    value: "cexiangdaohang",
-                                    label: "侧向导航",
-                                },
-                                {
-                                    value: "dingbudaohang",
-                                    label: "石泉县",
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    value: "zujian",
-                    label: "组件",
-                    children: [
-                        {
-                            value: "basic",
-                            label: "Basic",
-                            children: [
-                                {
-                                    value: "layout",
-                                    label: "Layout 布局",
-                                },
-                                {
-                                    value: "color",
-                                    label: "Color 色彩",
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    value: "ziyuan",
-                    label: "资源",
-                    children: [
-                        {
-                            value: "axure",
-                            label: "Axure Components",
-                        },
-                        {
-                            value: "sketch",
-                            label: "Sketch Templates",
-                        },
-                        {
-                            value: "jiaohu",
-                            label: "组件交互文档",
-                        },
-                    ],
-                },
-            ],
         };
     },
     components: { revisePassword },
     computed: {
-        userType() {
-            return this.$store.state.userInfo.userType;
-        },
         userId() {
-            return this.$store.state.userInfo.userId;
+            return this.$store.state.userId;
+        },
+        path() {
+            let route = this.$route;
+            let path = route.path;
+
+            if (route.name == "UserDetail") {
+                let arr = path.split("/");
+                path = "/" + arr[1] + "/" + arr[2];
+            }
+
+            return path;
         },
     },
     created() {
         this.getMenu();
-        this.getAreaList();
     },
     methods: {
-        //获取区域信息
-        getAreaList() {
-            AreaList().then((res) => {
-                if (res && res.data) {
-                    this.areaData = JSON.parse(JSON.stringify(res.data));
-                }
-            });
-        },
-
         // 退出登录+修改密码
         handleCommand(command) {
             if (command == "exit") {
-                this.$store.commit("setUserInfo", {});
                 this.$router.push({ path: "/login" });
             }
             if (command == "revisepass") {
@@ -296,26 +240,17 @@ export default {
 
         // 获取菜单
         getMenu() {
-            Menu({
-                UserId: this.userId,
-            }).then((res) => {
-                if (res && res.data) {
-                    this.menuList = res.data;
+            get("/api/realname/menu/menu-list", { UserId: this.userId }).then(
+                (res) => {
+                    if (res.isSuccess) {
+                        this.menuList = res.data;
+                    }
                 }
-            });
-        },
-
-        // 选择区域
-        changeArea(value) {
-            this.areaVal = value;
+            );
         },
 
         handleSelect(key, keyPath) {
             // console.log(key, keyPath);
-        },
-
-        goKsh() {
-            window.open("http://water.xhs-sz.com/");
         },
     },
 };
@@ -326,7 +261,6 @@ export default {
 .el-container {
     height: 100vh;
     width: 100%;
-    overflow: hidden;
 }
 
 .icons {
@@ -405,7 +339,7 @@ export default {
     border: none;
 }
 
-.logo {
+.el-container .logo {
     background: url(../assets/img/logo.svg) no-repeat;
     background-size: contain;
     width: 170px;
@@ -415,14 +349,9 @@ export default {
 
 .el-main {
     background: #f6f6f6;
-}
-.main {
-    background: #fff;
-    padding: 20px 24px 24px;
+    padding: 0;
+    height: calc(~"100vh - 68px");
     overflow: hidden;
-}
-.p20 {
-    padding: 20px;
 }
 </style>
 

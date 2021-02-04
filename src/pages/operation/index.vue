@@ -1,5 +1,5 @@
   <template>
-    <div>
+    <div class="mainCon">
         <div class="search-box">
             <el-form :inline="true" class="demo-form-inline fl">
                 <el-form-item label="关键词">
@@ -15,7 +15,12 @@
             </div>
         </div>
 
-        <el-table :data="tableData" style="width: 100%">
+        <el-table
+            :data="tableData"
+            style="width: 100%"
+            height="72vh"
+            v-loading="loading"
+        >
             <el-table-column prop="date" label="序号"> </el-table-column>
             <el-table-column prop="name" label="账户"> </el-table-column>
             <el-table-column prop="name" label="内容"> </el-table-column>
@@ -30,6 +35,7 @@ export default {
         return {
             openType: "add",
             showAdd: false,
+            loading: false,
             tableData: [
                 {
                     date: "2016-05-02",
@@ -62,3 +68,17 @@ export default {
     },
 };
 </script>
+
+<style lang="less" scoped>
+.mainCon {
+    margin: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    .pagination {
+        margin: 20px auto 0;
+    }
+}
+</style>

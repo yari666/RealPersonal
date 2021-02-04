@@ -5,7 +5,7 @@
         :current-page="queryInfo.SkipCount / queryInfo.MaxResultCount + 1"
         :page-sizes="[10, 15, 20, 25, 50]"
         :page-size="queryInfo.MaxResultCount"
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="total, sizes, total, prev, pager, next, jumper"
         :total="total"
     ></el-pagination>
 </template>

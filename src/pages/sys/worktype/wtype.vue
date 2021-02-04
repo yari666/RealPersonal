@@ -18,7 +18,12 @@
             </div>
         </div>
 
-        <el-table :data="tableData" style="width: 100%">
+        <el-table
+            :data="tableData"
+            style="width: 100%"
+            height="72vh"
+            v-loading="loading"
+        >
             <el-table-column prop="date" label="工种编号"> </el-table-column>
             <el-table-column prop="name" label="工种名称"> </el-table-column>
             <el-table-column prop="address" label="操作">
@@ -50,6 +55,7 @@ export default {
         return {
             openType: "add",
             showAdd: false,
+            loading: false,
             tableData: [
                 {
                     date: "2016-05-02",

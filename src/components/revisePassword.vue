@@ -40,8 +40,6 @@
 </template>
 
 <script>
-import { UserPwd } from "~/config/api.js";
-
 export default {
     data() {
         var validatePass = (rule, value, callback) => {

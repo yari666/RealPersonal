@@ -1,5 +1,5 @@
   <template>
-    <div>
+    <div class="mainCon">
         <div class="search-box">
             <el-form :inline="true" class="demo-form-inline fl">
                 <el-form-item label="姓名">
@@ -263,5 +263,16 @@ export default {
     font-size: 12px;
     margin-top: 10px;
     color: #409eff;
+}
+.mainCon {
+    margin: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    .pagination {
+        margin: 20px auto 0;
+    }
 }
 </style>

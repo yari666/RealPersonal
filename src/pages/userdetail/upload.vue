@@ -15,27 +15,6 @@
                 只能上传jpg/png/word/excel/pdf/zip/rar文件，且不超过20M。
             </div>
         </el-upload>
-        <ul class="list">
-            <li v-for="(item, index) in uploadList" :key="index">
-                <p class="fl">
-                    <i class="el-icon-tickets"></i>{{ item.fileName }}
-                </p>
-                <div class="fr">
-                    <a
-                        class="fl"
-                        :href="
-                            baseUrl + 'attachment/attachmentById?Id=' + item.id
-                        "
-                        :download="item.fileName"
-                        >下载</a
-                    >
-                    <span class="del" @click="DelFile(item.id, index)"
-                        >删除</span
-                    >
-                </div>
-            </li>
-            <li v-show="loading" v-loading="loading"></li>
-        </ul>
     </div>
 </template>
 

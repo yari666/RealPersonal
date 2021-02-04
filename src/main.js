@@ -11,6 +11,7 @@ import App from './App'
 
 import Axios from "./config/axios";
 
+
 // 使用axios
 Vue.prototype.$http = Axios;
 

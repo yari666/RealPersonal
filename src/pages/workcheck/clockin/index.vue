@@ -1,16 +1,12 @@
   <template>
-    <div>
+    <div class="mainCon">
         <div class="search-box">
             <el-form :inline="true" class="demo-form-inline fl">
-                <el-form-item label="姓名">
-                    <el-input placeholder="姓名"></el-input>
-                </el-form-item>
-                <el-form-item label="班组">
-                    <el-select placeholder="所属班组">
-                        <el-option label="群耀" value="shanghai"></el-option>
-                        <el-option label="富友" value="beijing"></el-option>
-                        <el-option label="新合盛" value="beijing"></el-option>
-                    </el-select>
+                <el-form-item label="关键词">
+                    <el-input
+                        placeholder="搜索关键词"
+                        v-model="KeyWord"
+                    ></el-input>
                 </el-form-item>
 
                 <el-form-item label="打卡时间">
@@ -25,7 +21,7 @@
                     </el-time-picker>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary">查询</el-button>
+                    <el-button type="primary" @click="getData">查询</el-button>
                 </el-form-item>
             </el-form>
 
@@ -34,61 +30,158 @@
             </div>
         </div>
 
-        <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="name" label="设备序列号"> </el-table-column>
-            <el-table-column prop="date" label="姓名"> </el-table-column>
-            <el-table-column prop="name" label="工号"> </el-table-column>
-            <el-table-column prop="address" label="身份证号"> </el-table-column>
-            <el-table-column prop="name" label="手机号"> </el-table-column>
-            <el-table-column prop="date" label="所属企业"> </el-table-column>
-            <el-table-column prop="date" label="所属项目"> </el-table-column>
-            <el-table-column prop="address" label="所属班组"> </el-table-column>
-            <el-table-column prop="name" label="打卡时间"> </el-table-column>
-            <el-table-column prop="name" label="现场照片"> </el-table-column>
-            <el-table-column prop="name" label="标识"> </el-table-column>
+        <el-table
+            :data="tableData"
+            style="width: 100%"
+            height="72vh"
+            v-loading="loading"
+        >
+            <el-table-column prop="deviceSerialNumber" label="设备序列号">
+            </el-table-column>
+            <el-table-column prop="employeeName" label="姓名">
+            </el-table-column>
+            <el-table-column prop="workNumber" label="工号" width="80px">
+            </el-table-column>
+            <el-table-column prop="idNumber" label="身份证号">
+            </el-table-column>
+            <el-table-column prop="phoneNumber" label="手机号">
+            </el-table-column>
+            <el-table-column prop="companyName" label="所属企业">
+            </el-table-column>
+            <el-table-column prop="projectName" label="所属项目">
+            </el-table-column>
+            <el-table-column prop="teamName" label="所属班组">
+            </el-table-column>
+
+            <el-table-column label="进出标识" width="80px">
+                <template slot-scope="scope">
+                    <span>{{
+                        scope.row.inOutStatus == 1 ? "进场" : "出场"
+                    }}</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="打卡时间" width="160px">
+                <template slot-scope="scope">
+                    <span
+                        >{{ scope.row.attendanceDate }}
+                        {{ scope.row.attendanceTime }}</span
+                    >
+                </template>
+            </el-table-column>
+            <el-table-column label="现场照片">
+                <template slot-scope="scope">
+                    <el-image
+                        style="width: 90px; height: 120px"
+                        :src="'data:img/jpg;base64,' + scope.row.scenePhoto"
+                    ></el-image>
+                </template>
+            </el-table-column>
         </el-table>
+
+        <div class="pagination">
+            <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :page-size="10"
+                layout="total, prev, pager, next, jumper"
+                :total="totalCount"
+            >
+            </el-pagination>
+        </div>
     </div>
 </template>
 
 <script>
+import { get } from "~/config/fetch.js";
+
 export default {
     data() {
         return {
             openType: "add",
             showAdd: false,
+            loading: false,
             value4: [
                 new Date(2016, 9, 10, 8, 40),
                 new Date(2016, 9, 10, 9, 40),
             ],
-            tableData: [
-                {
-                    date: "2016-05-02",
-                    name: "王小虎",
-                    address: "上海市普陀区金沙江路 1518 弄",
-                },
-                {
-                    date: "2016-05-04",
-                    name: "王小虎",
-                    address: "上海市普陀区金沙江路 1517 弄",
-                },
-                {
-                    date: "2016-05-01",
-                    name: "王小虎",
-                    address: "上海市普陀区金沙江路 1519 弄",
-                },
-                {
-                    date: "2016-05-03",
-                    name: "王小虎",
-                    address: "上海市普陀区金沙江路 1516 弄",
-                },
-            ],
+            tableData: [],
+            totalCount: 0,
+            KeyWord: "",
+            pagination: {
+                SkipCount: 0, //跳过的记录数
+                MaxResultCount: 10, //展示数量
+            },
         };
+    },
+    created() {
+        this.getData();
     },
     methods: {
         addClass(type) {
             this.openType = type;
             this.showAdd = true;
         },
+        getData() {
+            this.loading = true;
+            get(
+                "/api/realname/attendance-clock",
+                Object.assign(
+                    {
+                        KeyWord: this.KeyWord,
+                        Sorting: "",
+                    },
+                    this.pagination
+                )
+            )
+                .then((res) => {
+                    if (res.isSuccess) {
+                        this.tableData = res.data.items;
+                        this.totalCount = res.data.totalCount;
+                        this.loading = false;
+                    }
+                })
+                .catch((err) => {
+                    this.loading = false;
+                });
+        },
+        // 监听 pageSize改变的事件
+        handleSizeChange(newSize) {
+            this.pagination.MaxResultCount = newSize;
+            this.pagination.SkipCount = 0;
+            this.getData();
+        },
+        // 监听 页码值
+        handleCurrentChange(newPage) {
+            console.log(newPage);
+            this.pagination.SkipCount =
+                (newPage - 1) * this.pagination.MaxResultCount;
+            this.getData();
+        },
+
+        // 导出
+        exportData() {
+            get(`/api/realname/project/export-projects`, {
+                FileName: "D:\\bya\\raaaaaa.xlsx",
+            }).then((res) => {
+                if (res.isSuccess) {
+                    console.log(res);
+                }
+            });
+        },
     },
 };
 </script>
+
+<style lang="less" scoped>
+.mainCon {
+    margin: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    .pagination {
+        margin: 20px auto 0;
+    }
+}
+</style>

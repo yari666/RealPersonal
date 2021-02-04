@@ -1,17 +1,15 @@
 <template>
     <div>
         <el-tree
-            :data="data2"
+            :data="menuIdList"
             show-checkbox
             node-key="id"
-            :default-expanded-keys="[2, 3]"
-            :default-checked-keys="[5]"
             :props="defaultProps"
         >
         </el-tree>
         <div class="button">
-            <el-button type="primary">确定</el-button>
-            <el-button>取消</el-button>
+            <el-button type="primary" @click="onSubmit">确定</el-button>
+            <el-button @click="cancel">取消</el-button>
         </div>
     </div>
 </template>
@@ -21,7 +19,7 @@
 export default {
     data() {
         return {
-            data2: [
+            menuIdList: [
                 {
                     id: 1,
                     label: "一级 1",
@@ -76,6 +74,51 @@ export default {
                 label: "label",
             },
         };
+    },
+    props: ["currentItem"],
+    watch: {
+        currentItem: {
+            handler(newName) {
+                this.currentItem = newName;
+                this.checkEvent();
+            },
+            immediate: true,
+            deep: true,
+        },
+    },
+    created() {
+        this.getData();
+        this.checkEvent();
+    },
+    methods: {
+        getData() {
+            get(`/api/realname/project/project-dictionary`).then((res) => {
+                if (res.isSuccess) {
+                    this.data = res.data;
+                }
+            });
+        },
+        checkEvent() {
+            let arr = [];
+            this.currentItem.projectIdList.forEach((i) => {
+                arr.push(i.id);
+            });
+            this.checkedIndex = arr;
+        },
+        onSubmit() {
+            let param = {
+                roleCode: this.currentItem.roleCode,
+                roleName: this.currentItem.roleName,
+                isActive: this.currentItem.isActive,
+                remark: this.currentItem.remark,
+                selectedMenu: this.currentItem.menuIdList.map((i) => i.id),
+                projectids: this.checkedIndex,
+            };
+            this.$emit("editData", param);
+        },
+        cancel() {
+            this.$emit("cancel");
+        },
     },
 };
 </script>

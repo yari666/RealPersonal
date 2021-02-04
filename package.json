@@ -9,8 +9,9 @@
     },
     "dependencies": {
         "animate.css": "^4.1.1",
-        "echarts": "^4.8.0",
+        "echarts": "^4.9.0",
         "element-ui": "^2.13.2",
+        "js-base64": "^3.6.0",
         "less-loader": "^4.1.0",
         "vue": "^2.5.16",
         "vue-baidu-map": "^0.21.22",

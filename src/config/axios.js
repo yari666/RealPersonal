@@ -9,6 +9,7 @@ const service = axios.create({
     timeout: 10000 // 请求超时时间
 })
 
+
 // 生成环境跨域处理
 if (process.env.NODE_ENV !== 'development') {
     service.withCredentials = true
@@ -16,19 +17,19 @@ if (process.env.NODE_ENV !== 'development') {
 
 // 挂在请求配置
 service.interceptors.request.use(config => {
-    // config.headers['content-type'] = 'image/png';
+    if (config.params && config.params.responseType && config.params.responseType == 'blob') {
+        config.responseType = 'blob';
+    }
     config.headers.Authorization = 'Bearer ' + window.localStorage.getItem('token');
     return config
 })
 
+
 // axios 响应拦截器
 service.interceptors.response.use(
     response => {
-        // return response
-
-        // 过滤
         return {
-            status: response.status,
+            isSuccess: response.status === 200 || response.status === 204,
             data: response.data,
             statusText: response.statusText
         };
@@ -47,7 +48,6 @@ service.interceptors.response.use(
                     break
                 }
                 case 403: {
-                    console.log('错误：' + error.response)
                     Message({
                         message: error.response.data.error.message || 'Error',
                         type: 'error',

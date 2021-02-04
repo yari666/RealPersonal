@@ -1,102 +1,250 @@
   <template>
-    <div class="overflow">
+    <div class="overflow mainCon">
         <div class="search-box">
             <el-form :inline="true" class="demo-form-inline fl">
                 <el-form-item label="关键词">
-                    <el-input placeholder="关键词"></el-input>
-                </el-form-item>
-                <el-form-item label="所属项目">
-                    <el-select placeholder="项目名称">
-                        <el-option label="项目1" value="shanghai"></el-option>
-                        <el-option label="项目2" value="beijing"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="苏安码状态">
-                    <el-select placeholder="苏安码状态">
-                        <el-option label="绿码" value="shanghai"></el-option>
-                        <el-option label="红码" value="beijing"></el-option>
-                        <el-option label="黄码" value="beijing"></el-option>
-                    </el-select>
+                    <el-input
+                        placeholder="搜索关键词"
+                        v-model="KeyWord"
+                    ></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary">查询</el-button>
+                    <el-button type="primary" @click="getData">查询</el-button>
                 </el-form-item>
             </el-form>
 
             <div class="fr">
-                <el-button type="primary">同步</el-button>
-                <el-button type="primary">导出</el-button>
+                <el-button type="primary" @click="getData">同步</el-button>
+                <el-button type="primary" @click="exportData">导出</el-button>
             </div>
         </div>
 
-        <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="date" label="工号"> </el-table-column>
-            <el-table-column prop="name" label="姓名"> </el-table-column>
-            <el-table-column prop="date" label="证件号码"> </el-table-column>
-            <el-table-column prop="name" label="性别"> </el-table-column>
-            <el-table-column prop="date" label="联系电话"> </el-table-column>
-            <el-table-column prop="name" label="苏康码状态"> </el-table-column>
-            <el-table-column prop="date" label="所属项目"> </el-table-column>
-            <el-table-column prop="name" label="所属企业"> </el-table-column>
-            <el-table-column prop="address" label="所属班组"> </el-table-column>
-            <el-table-column prop="address" label="工种"> </el-table-column>
-            <el-table-column prop="address" label="操作" width="220">
-                <template>
-                    <el-button type="primary" size="small" plain
+        <el-table
+            :data="tableData"
+            style="width: 100%"
+            height="72vh"
+            v-loading="loading"
+        >
+            <el-table-column prop="workNumber" label="工号"> </el-table-column>
+            <el-table-column prop="employeeName" label="姓名">
+            </el-table-column>
+            <el-table-column prop="idNumber" label="证件号码">
+            </el-table-column>
+            <el-table-column label="性别">
+                <template slot-scope="scope">
+                    <span>{{ scope.row.gender == 0 ? "女" : "男" }}</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="phoneNumber" label="联系电话">
+            </el-table-column>
+            <el-table-column prop="name" label="苏康码状态">
+                绿码</el-table-column
+            >
+            <el-table-column prop="projectName" label="所属项目">
+            </el-table-column>
+            <el-table-column prop="companyName" label="所属企业">
+            </el-table-column>
+            <el-table-column prop="teamName" label="所属班组">
+            </el-table-column>
+            <el-table-column label="操作" width="260">
+                <template slot-scope="scope">
+                    <el-button
+                        type="primary"
+                        size="small"
+                        plain
+                        @click="goDetail(scope.row.id, true)"
                         >查看</el-button
                     >
                     <el-button
                         type="primary"
                         size="small"
-                        @click="addClass('edit')"
-                        >编辑</el-button
+                        @click="editCert(scope.row)"
+                        >编辑证书</el-button
                     >
-                    <el-button type="danger" size="small">删除</el-button>
+                    <el-button
+                        type="danger"
+                        size="small"
+                        @click="delData(scope.row.id)"
+                        >删除</el-button
+                    >
                 </template></el-table-column
             >
         </el-table>
+
         <div class="pagination">
-            <el-pagination layout="prev, pager, next" :total="50">
+            <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :page-size="10"
+                layout="total, prev, pager, next, jumper"
+                :total="totalCount"
+            >
             </el-pagination>
         </div>
+
+        <!-- 弹框内容 -->
+        <el-dialog
+            :close-on-click-modal="false"
+            title="人员信息"
+            :visible.sync="showAdd"
+            v-if="showAdd"
+            width="70%"
+        >
+            <add v-if="showAdd"></add>
+        </el-dialog>
+
+        <el-dialog
+            :close-on-click-modal="false"
+            title="人员信息"
+            :visible.sync="showCert"
+        >
+            <edit-box
+                v-if="showCert"
+                :currentId="currentId"
+                :currentName="currentName"
+            ></edit-box>
+        </el-dialog>
     </div>
 </template>
 
 <script>
+import { get, del } from "~/config/fetch.js";
+import add from "~/pages/userdetail/index";
+import editBox from "./cert";
+
 export default {
     data() {
         return {
-            openType: "add",
             showAdd: false,
-            tableData: [
-                {
-                    date: "2016-05-02",
-                    name: "王小虎",
-                    address: "上海市普陀区金沙江路 1518 弄",
-                },
-                {
-                    date: "2016-05-04",
-                    name: "王小虎",
-                    address: "上海市普陀区金沙江路 1517 弄",
-                },
-                {
-                    date: "2016-05-01",
-                    name: "王小虎",
-                    address: "上海市普陀区金沙江路 1519 弄",
-                },
-                {
-                    date: "2016-05-03",
-                    name: "王小虎",
-                    address: "上海市普陀区金沙江路 1516 弄",
-                },
-            ],
+            loading: false,
+            showCert: false,
+            totalCount: 0,
+            tableData: [],
+            currentId: "",
+            currentName: "",
+            KeyWord: "",
+            pagination: {
+                SkipCount: 0, //跳过的记录数
+                MaxResultCount: 10, //展示数量
+            },
         };
     },
+    created() {
+        this.getData();
+    },
+    components: { add, editBox },
     methods: {
-        addClass(type) {
-            this.openType = type;
+        addClass(id) {
+            this.currentId = id;
             this.showAdd = true;
+        },
+        editCert(item) {
+            this.currentId = item.id;
+            this.currentName = item.employeeName;
+            this.showCert = true;
+        },
+        getData() {
+            this.loading = true;
+            get(
+                "/api/realname/employee/ordinary-workers-list",
+                Object.assign(
+                    {
+                        KeyWord: this.KeyWord,
+                        Sorting: "",
+                    },
+                    this.pagination
+                )
+            )
+                .then((res) => {
+                    if (res.isSuccess) {
+                        this.tableData = res.data.items;
+                        this.totalCount = res.data.totalCount;
+                        this.loading = false;
+                    }
+                })
+                .catch((err) => {
+                    this.loading = false;
+                });
+        },
+        // 监听 pageSize改变的事件
+        handleSizeChange(newSize) {
+            this.pagination.MaxResultCount = newSize;
+            this.pagination.SkipCount = 0;
+            this.getData();
+        },
+        // 监听 页码值
+        handleCurrentChange(newPage) {
+            this.pagination.SkipCount =
+                (newPage - 1) * this.pagination.MaxResultCount;
+            this.getData();
+        },
+
+        // 导出
+        exportData() {
+            get(`/api/realname/employee/export-projects`, {
+                KeyWord: this.KeyWord,
+                EmployeeType: 1,
+                responseType: "blob",
+            }).then((res) => {
+                var content = res.data;
+                var blob = new Blob([content]);
+                var fileName = "普通人员.xlsx"; //要保存的文件名称
+                if ("download" in document.createElement("a")) {
+                    // 非IE下载
+                    var elink = document.createElement("a");
+                    elink.download = fileName;
+                    elink.style.display = "none";
+                    elink.href = URL.createObjectURL(blob);
+                    document.body.appendChild(elink);
+                    elink.click();
+                    URL.revokeObjectURL(elink.href); // 释放URL 对象
+                    document.body.removeChild(elink);
+                } else {
+                    // IE10+下载
+                    navigator.msSaveBlob(blob, fileName);
+                }
+                console.log(res);
+            });
+        },
+
+        delData(id) {
+            this.$confirm("确认要删除？")
+                .then((_) => {
+                    del(`/api/realname/employee/${id}`).then((res) => {
+                        if (res.isSuccess) {
+                            this.$message({
+                                message: "删除成功！",
+                                type: "success",
+                            });
+                            this.getData();
+                        }
+                    });
+                })
+                .catch((_) => {
+                    console.log(_);
+                });
+        },
+
+        goDetail(id, readOnly) {
+            this.$router.push({
+                path: `/user/worker/${id}?readOnly=${readOnly}`,
+            });
         },
     },
 };
 </script>
+
+
+<style lang="less" scoped>
+.mainCon {
+    margin: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    .pagination {
+        margin: 20px auto 0;
+    }
+}
+</style>

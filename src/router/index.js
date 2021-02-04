@@ -9,6 +9,7 @@ const routes = [
         path: '/',
         name: 'Home',
         component: () => import('~/pages/home'),
+        redirect: '/home',
         children: [
 
             // 首页
@@ -36,9 +37,9 @@ const routes = [
                 component: () => import('~/pages/user/manager/index'),
             },
             {
-                path: '/user/managerdetail',
-                name: 'MaganerDetail',
-                component: () => import('~/pages/user/manager/detail/index'),
+                path: '/user/manager/:employeeId',
+                name: 'UserDetail',
+                component: () => import('~/pages/userdetail/index'),
             },
             {
                 path: '/user/worker',
@@ -46,9 +47,9 @@ const routes = [
                 component: () => import('~/pages/user/worker/index'),
             },
             {
-                path: '/user/workerdetail',
-                name: 'WorkerDetail',
-                component: () => import('~/pages/user/worker/detail/index'),
+                path: '/user/worker/:employeeId',
+                name: 'UserDetail',
+                component: () => import('~/pages/userdetail/index'),
             },
             // 访客管理
             {
@@ -142,23 +143,19 @@ const router = new Router({
 
 // 挂在路由导航守卫
 router.beforeEach((to, from, next) => {
-    // to将要访问的路径
-    // from 代表从哪个路径跳转而来
-    // next 是一个函数，表示方行
-    // next() 放行    next(/login) 强行跳转
 
-    // if (to.path === '/login') {
-    //     return next()
-    // }
+    var token = window.localStorage.getItem('token')
 
-    // const token = window.localStorage.getItem('token')
-    // if (!token) {
-    //     return next('/login')
-    // }
-
-
-
-    next()
+    if (to.path === '/login') {
+        next()
+    } else {
+        if (token) {
+            next()
+        } else {
+            next('/login')
+        }
+    }
 })
+
 
 export default router;

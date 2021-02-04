@@ -1,53 +1,153 @@
 <template>
-    <el-form ref="form" :model="form" label-width="160px">
-        <el-form-item label="菜单编号">
-            <el-input v-model="form.name"></el-input>
+    <el-form ref="form" :model="form" label-width="100px" :rules="rules">
+        <el-form-item label="菜单编号" prop="menuCode">
+            <el-input v-model="form.menuCode"></el-input>
         </el-form-item>
-        <el-form-item label="菜单名称">
-            <el-input v-model="form.name"></el-input>
+        <el-form-item label="菜单名称" prop="menuName">
+            <el-input v-model="form.menuName"></el-input>
         </el-form-item>
-        <el-form-item label="菜单URL">
-            <el-input v-model="form.name"></el-input>
+        <el-form-item label="菜单URL" prop="menuUrl">
+            <el-input v-model="form.menuUrl"></el-input>
         </el-form-item>
         <el-form-item label="菜单图标">
-            <el-upload
-                class="avatar-uploader"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :show-file-list="false"
-                :on-success="handleAvatarSuccess"
-                :before-upload="beforeAvatarUpload"
+            <el-input v-model="form.menuIcon"></el-input>
+        </el-form-item>
+        <el-form-item label="父级菜单">
+            <el-select
+                placeholder="选择父级菜单"
+                v-model="form.menuParentId"
+                style="width: 100%"
             >
-                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
+                <el-option
+                    v-for="item in menuList"
+                    :key="item.id"
+                    :label="item.menuName"
+                    :value="item.id"
+                ></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="是否激活">
+            <el-switch
+                v-model="form.isActive"
+                active-color="#13ce66"
+                inactive-color="#aaa"
+            >
+            </el-switch>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary">立即创建</el-button>
-            <el-button>取消</el-button>
+            <el-button type="primary" @click="onSubmit('form')">确定</el-button>
+            <el-button @click="cancel">取消</el-button>
         </el-form-item>
     </el-form>
 </template>
 
 <script>
+import { get, post, put } from "~/config/fetch.js";
+
 export default {
     data() {
         return {
             form: {
-                name: "",
-                region: "",
-                date1: "",
-                date2: "",
-                delivery: false,
-                type: [],
-                resource: "",
-                desc: "",
-                imageUrl: "",
+                menuCode: "",
+                menuName: "",
+                menuParentId: "",
+                menuUrl: "",
+                menuIcon: "",
+                isActive: true,
+            },
+            menuList: [],
+            rules: {
+                menuCode: [
+                    {
+                        required: true,
+                        message: "请输入菜单编号",
+                        trigger: "blur",
+                    },
+                ],
+                menuName: [
+                    {
+                        required: true,
+                        message: "请输入菜单名称",
+                        trigger: "blur",
+                    },
+                ],
+                menuUrl: [
+                    {
+                        required: true,
+                        message: "请输入菜单链接",
+                        trigger: "blur",
+                    },
+                ],
             },
         };
     },
+    props: ["openType", "currentItem"],
+    watch: {
+        currentItem: {
+            handler(newName, oldName) {
+                this.currentItem = newName;
+
+                this.form = newName;
+            },
+            immediate: true,
+            deep: true,
+        },
+    },
+    created() {
+        this.getMenu();
+        this.form = Object.assign(this.form, this.currentItem);
+    },
     methods: {
-        onSubmit() {
-            console.log("submit!");
+        getMenu() {
+            get(`/api/realname/menu/parent-menu`).then((res) => {
+                if (res.isSuccess) {
+                    this.menuList = res.data;
+                }
+            });
+        },
+        onSubmit(formName) {
+            let _this = this;
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    let param = {
+                        menuCode: _this.form.menuCode,
+                        menuName: _this.form.menuName,
+                        menuParentId: _this.form.menuParentId,
+                        menuUrl: _this.form.menuUrl,
+                        menuIcon: _this.form.menuIcon,
+                        isActive: _this.form.isActive,
+                    };
+                    if (_this.openType == "add") {
+                        // 新增
+                        post(`/api/realname/menu`, param).then((res) => {
+                            if (res.isSuccess) {
+                                _this.$message({
+                                    message: "新增成功！",
+                                    type: "success",
+                                });
+                                this.$emit("ok");
+                            }
+                        });
+                    } else {
+                        // 编辑
+                        put(
+                            `/api/realname/menu/${_this.currentItem.id}`,
+                            param
+                        ).then((res) => {
+                            if (res.isSuccess) {
+                                _this.$message({
+                                    message: "修改成功！",
+                                    type: "success",
+                                });
+                                this.$emit("ok");
+                            }
+                        });
+                    }
+                } else {
+                    console.log("error submit!!");
+                    return false;
+                }
+            });
         },
         handleAvatarSuccess(res, file) {
             this.imageUrl = URL.createObjectURL(file.raw);
@@ -63,6 +163,9 @@ export default {
                 this.$message.error("上传头像图片大小不能超过 2MB!");
             }
             return isJPG && isLt2M;
+        },
+        cancel() {
+            this.$emit("cancel");
         },
     },
 };
