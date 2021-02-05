@@ -150,7 +150,7 @@ export default {
             return new File([u8arr], filename, { type: mime });
         },
         done() {
-            this.$emit("getImg", { imgSrc });
+            this.$emit("getImg", { imgSrc: this.imgSrc });
         },
     },
 };

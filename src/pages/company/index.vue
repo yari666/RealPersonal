@@ -8,6 +8,20 @@
                         v-model="KeyWord"
                     ></el-input>
                 </el-form-item>
+
+                <el-form-item label="所属区域">
+                    <el-select v-model="area" placeholder="请选择">
+                        <el-option label="全部" value=""> </el-option>
+                        <el-option
+                            v-for="(item, index) in areaData"
+                            :key="index"
+                            :label="item"
+                            :value="item"
+                        >
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
                 <el-form-item>
                     <el-button type="primary" @click="getData">查询</el-button>
                 </el-form-item>
@@ -94,13 +108,24 @@ export default {
                 SkipCount: 0, //跳过的记录数
                 MaxResultCount: 10, //展示数量
             },
+
+            areaData: [],
+            area: "",
         };
     },
     components: { add },
     created() {
         this.getData();
+        this.getArea();
     },
     methods: {
+        getArea() {
+            get(`/api/realname/project/project-citys`).then((res) => {
+                if (res.isSuccess) {
+                    this.areaData = res.data;
+                }
+            });
+        },
         addClass(id) {
             this.currentId = id;
             this.showAdd = true;
@@ -113,6 +138,7 @@ export default {
                     {
                         KeyWord: this.KeyWord,
                         Sorting: "",
+                        City: this.area,
                     },
                     this.pagination
                 )

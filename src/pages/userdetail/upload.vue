@@ -2,18 +2,16 @@
 <template>
     <div class="main">
         <el-upload
-            ref="elupload"
-            :action="uploadUrl"
-            :file-list="fileList"
-            :before-upload="handleBeforeUpload"
-            :on-success="successUpload"
-            :show-file-list="false"
+            action=""
+            :on-change="getFile"
+            :before-upload="beforeAvatarUpload"
+            :limit="1"
+            list-type="picture"
+            :auto-upload="false"
         >
-            <el-button type="primary">点击上传</el-button>
-
-            <div slot="tip" class="el-upload__tip">
-                只能上传jpg/png/word/excel/pdf/zip/rar文件，且不超过20M。
-            </div>
+            <el-button size="small" type="primary"
+                >选择图片上传,最多上传一张图片</el-button
+            >
         </el-upload>
     </div>
 </template>
@@ -28,114 +26,41 @@ export default {
             fileList: [],
             uploadUrl: "",
             baseUrl: "",
-            params: {
-                guid: "", //企业id或项目id
-                fileType: 0, //文件类型 0图片 1文件
-                category: 0, //业主类型 0企业 1项目
-                categoryName: "", //企业或项目名称
-                remark: "",
-            },
         };
     },
-    props: ["projectId", "projectName", "uploadList"],
-    created() {
-        this.baseUrl = Env.baseUrl;
-
-        this.uploadUrl =
-            this.baseUrl +
-            `attachment/uploadAttachment?guid=${this.projectId}&fileType=1&category=1&categoryName=${this.projectName}`;
-
-        if (this.uploadList && this.uploadList.length) {
-            this.uploadList.forEach((item) => {
-                this.fileList.push({
-                    name: item.fileName,
-                    id: item.id,
-                });
-            });
-        }
-    },
+    created() {},
     methods: {
-        // 上传文件
-        handleBeforeUpload(file) {
-            const uploadLimit = 20; //文件大小
-            const uploadTypes = [
-                "jpg",
-                "png",
-                "doc",
-                "docx",
-                "xlsx",
-                "zip",
-                "rar",
-                "pdf",
-                "txt",
-            ];
-            const filetype = file.name.replace(/.+\./, "");
-            const isRightSize = (file.size || 0) / 1024 / 1024 < uploadLimit;
-            if (!isRightSize) {
-                this.$message.error("文件大小超过 " + uploadLimit + "MB");
-                return false;
-            }
+        beforeAvatarUpload(file) {
+            console.log(file.size);
+            const isLt2M = file.size / 1024 < 100;
 
-            if (uploadTypes.indexOf(filetype.toLowerCase()) === -1) {
-                this.$message.warning({
-                    message:
-                        "请上传后缀名为jpg、png、txt、pdf、doc、docx、xlsx、zip或rar的附件",
-                });
-                return false;
+            if (!isLt2M) {
+                this.$message.error("上传图片大小不能超过 100KB!");
             }
-
-            this.loading = true;
-            return true;
+            return isLt2M;
         },
-
-        // 上传成功
-        successUpload(response, file, fileList) {
-            if (response && response.id && response.fileName) {
-                this.$message.success({
-                    message: "上传成功",
-                });
-
-                this.uploadList.push({
-                    id: response.id,
-                    fileName: response.fileName,
-                });
-                this.loading = false;
-            }
-        },
-
-        // // 上传失败
-        // errorUpload(err, file, fileList) {
-        //     let error = JSON.parse(err.message);
-        //     this.$message.warning({
-        //         message: error.error.message,
-        //     });
-        // },
-
-        DelFile(Id, index) {
-            DelFile({ Id }).then((res) => {
-                if (res) {
-                    this.uploadList.splice(index, 1);
-                }
+        getFile(file, fileList) {
+            let _this = this;
+            this.getBase64(file.raw).then((res) => {
+                _this.$emit("getImg", { imgSrc: res });
             });
         },
-
-        // // 删除文件
-        // beforeRemove(file, fileList) {
-        //     return this.$confirm(`确定删除 ${file.name}？`);
-        // },
-
-        // handleRemove(file, fileList) {
-        //     DelFile({ Id: file.id }).then((res) => {
-        //         console.log(res);
-        //     });
-        // },
-
-        // // 下载文件
-        // downloadFile(file) {
-        //     DownloadFile({ Id: file.id }).then((res) => {
-
-        //     });
-        // },
+        getBase64(file) {
+            return new Promise(function (resolve, reject) {
+                let reader = new FileReader();
+                let imgResult = "";
+                reader.readAsDataURL(file);
+                reader.onload = function () {
+                    imgResult = reader.result;
+                };
+                reader.onerror = function (error) {
+                    reject(error);
+                };
+                reader.onloadend = function () {
+                    resolve(imgResult);
+                };
+            });
+        },
     },
 };
 </script>

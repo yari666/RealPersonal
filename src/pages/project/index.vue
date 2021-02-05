@@ -9,6 +9,19 @@
                     ></el-input>
                 </el-form-item>
 
+                <el-form-item label="所属区域">
+                    <el-select v-model="area" placeholder="请选择">
+                        <el-option label="全部" value=""> </el-option>
+                        <el-option
+                            v-for="(item, index) in areaData"
+                            :key="index"
+                            :label="item"
+                            :value="item"
+                        >
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
                 <el-form-item>
                     <el-button type="primary" @click="getData">查询</el-button>
                 </el-form-item>
@@ -32,8 +45,18 @@
             </el-table-column>
             <el-table-column label="项目地址">
                 <template slot-scope="scope">
-                    <span>{{ getAddress(scope.row) }}</span>
-                    <span>{{ scope.row.address }}</span>
+                    <span>{{ scope.row.city ? scope.row.city : "" }}</span>
+                    <span>{{
+                        scope.row.township ? scope.row.township : ""
+                    }}</span>
+                    <span>{{
+                        scope.row.villagesAndTowns
+                            ? scope.row.villagesAndTowns
+                            : ""
+                    }}</span>
+                    <span>{{
+                        scope.row.address ? scope.row.address : ""
+                    }}</span>
                 </template>
             </el-table-column>
 
@@ -50,7 +73,7 @@
                     <span>{{ scope.row.constructionUnitContactPhone }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" style="width: 320px">
+            <el-table-column label="操作" width="200">
                 <template slot-scope="scope">
                     <el-button
                         type="primary"
@@ -103,30 +126,24 @@ export default {
                 SkipCount: 0, //跳过的记录数
                 MaxResultCount: 10, //展示数量
             },
+
+            areaData: [],
+            area: "",
         };
     },
     components: { add },
     created() {
         this.getData();
-    },
-    computed: {
-        getAddress() {
-            return (item) => {
-                if (item.city || item.township || item.villagesAndTowns) {
-                    return (
-                        item.city +
-                        "-" +
-                        item.township +
-                        "-" +
-                        item.villagesAndTowns
-                    );
-                } else {
-                    return "";
-                }
-            };
-        },
+        this.getArea();
     },
     methods: {
+        getArea() {
+            get(`/api/realname/project/project-citys`).then((res) => {
+                if (res.isSuccess) {
+                    this.areaData = res.data;
+                }
+            });
+        },
         addClass(id) {
             console.log(id);
             this.currentId = id;
@@ -141,6 +158,7 @@ export default {
                     {
                         KeyWord: this.KeyWord,
                         Sorting: "",
+                        City: this.area,
                     },
                     this.pagination
                 )

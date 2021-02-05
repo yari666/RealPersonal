@@ -8,6 +8,20 @@
                         v-model="KeyWord"
                     ></el-input>
                 </el-form-item>
+
+                <el-form-item label="所属区域">
+                    <el-select v-model="area" placeholder="请选择">
+                        <el-option label="全部" value=""> </el-option>
+                        <el-option
+                            v-for="(item, index) in areaData"
+                            :key="index"
+                            :label="item"
+                            :value="item"
+                        >
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
                 <el-form-item>
                     <el-button type="primary" @click="getData">查询</el-button>
                 </el-form-item>
@@ -47,7 +61,7 @@
             </el-table-column>
             <el-table-column prop="projectName" label="所属项目">
             </el-table-column>
-            <el-table-column label="操作" width="220px">
+            <el-table-column label="操作" width="410px">
                 <template slot-scope="scope">
                     <el-button
                         type="primary"
@@ -59,8 +73,22 @@
                     <el-button
                         type="primary"
                         size="small"
-                        @click="addClass('edit')"
+                        @click="editClass(scope.row.id)"
                         >编辑</el-button
+                    >
+
+                    <el-button
+                        type="warning"
+                        size="small"
+                        @click="deviceBind(scope.row)"
+                        >联接设备</el-button
+                    >
+
+                    <el-button
+                        type="warning"
+                        size="small"
+                        @click="deviceUserBind(scope.row)"
+                        >人员下发</el-button
                     >
                     <el-button
                         type="danger"
@@ -92,7 +120,7 @@
             width="70%"
         >
             <add
-                :currentItem="currentItem"
+                :currentId="currentId"
                 :openType="openType"
                 v-if="showAdd"
                 @cancel="closeCancel"
@@ -104,7 +132,7 @@
 
 <script>
 import add from "~/pages/userdetail/info";
-import { get, del } from "~/config/fetch.js";
+import { get, del, post } from "~/config/fetch.js";
 
 export default {
     data() {
@@ -120,35 +148,59 @@ export default {
                 SkipCount: 0, //跳过的记录数
                 MaxResultCount: 10, //展示数量
             },
+            areaData: [],
+            area: "",
             currentItem: {
-                workNumber: "",
+                address: "",
+                birthday: "",
+                cardExpiryDate: "",
+                cardValidityDate: "",
+                city: "",
                 employeeName: "",
+                employeeType: 2,
+                gender: 0,
+                id: "",
                 idNumber: "",
+                licenseIssuingAuthority: "",
+                national: "",
                 phoneNumber: "",
-                scheduleStartDate: "",
+                projectId: "",
+                province: "",
                 scheduleEndDate: "",
-                managerialPosition: "",
+                scheduleStartDate: "",
+                secondGenerCertiPhoto: "",
+                secondGenerCertiPhoto64: "",
+                currentPhoto: "",
+                currentPhoto64: "", //现场照片
+                township: "",
+                workNumber: "",
+                workTypeCategory: "",
                 workType: "",
                 teamName: "",
-                companyId: "",
-                projectId: "",
-                id: "",
             },
         };
     },
     components: { add },
     created() {
         this.getData();
+        this.getArea();
     },
     methods: {
+        getArea() {
+            get(`/api/realname/project/project-citys`).then((res) => {
+                if (res.isSuccess) {
+                    this.areaData = res.data;
+                }
+            });
+        },
         addClass() {
             this.openType = "add";
             this.showAdd = true;
         },
-        editClass(item) {
+        editClass(id) {
             this.openType = "edit";
             this.showAdd = true;
-            this.currentItem = item;
+            this.currentId = id;
         },
         closeOk() {
             this.showAdd = false;
@@ -159,7 +211,34 @@ export default {
         },
         lookDetail(id) {
             this.currentId = id;
-            this.showEdit = true;
+            this.$router.push({
+                path: `/user/worker/${id}?readOnly=true`,
+            });
+        },
+        deviceBind(item) {
+            get(`/api/realname/employee/employees-face-detect`, {
+                projectId: item.projectId,
+                employeeId: item.id,
+            }).then((res) => {
+                if (res.isSuccess) {
+                    this.$message({
+                        message: "联接成功！",
+                        type: "success",
+                    });
+                }
+            });
+        },
+        deviceUserBind(item) {
+            post(
+                `/api/realname/employee/deivce-users-asnyc/${item.projectId}`
+            ).then((res) => {
+                if (res.isSuccess) {
+                    this.$message({
+                        message: "下发成功！",
+                        type: "success",
+                    });
+                }
+            });
         },
         getData() {
             this.loading = true;
@@ -169,6 +248,7 @@ export default {
                     {
                         KeyWord: this.KeyWord,
                         Sorting: "",
+                        City: this.area,
                     },
                     this.pagination
                 )

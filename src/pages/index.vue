@@ -34,7 +34,7 @@
                             ><i class="el-icon-user"></i>
                         </li>
                         <li>
-                            <span>入场人员</span><b>{{ employeeIn }}</b
+                            <span>进场人员</span><b>{{ employeeIn }}</b
                             ><i class="el-icon-user"></i>
                         </li>
                         <li>
@@ -48,7 +48,7 @@
                     </ul>
 
                     <div class="rc">
-                        <div class="title">入场人员统计</div>
+                        <div class="title">今日进场人员统计</div>
                         <div id="rcEchart" class="rcEchart"></div>
                     </div>
                 </td>
@@ -97,13 +97,24 @@
                         class="table"
                         v-loading="loading"
                     >
-                        <el-table-column prop="name" label="姓名">
+                        <el-table-column prop="employeeName" label="姓名">
                         </el-table-column>
-                        <el-table-column prop="address" label="工种">
+                        <el-table-column prop="workType" label="工种">
                         </el-table-column>
-                        <el-table-column prop="date" label="进/出场">
+                        <el-table-column label="进/出场">
+                            <template slot-scope="scope">
+                                <span>{{
+                                    scope.row.inOutStatus == 0 ? "出场" : "进场"
+                                }}</span>
+                            </template>
                         </el-table-column>
-                        <el-table-column prop="date" label="时间">
+                        <el-table-column label="打卡时间" width="160">
+                            <template slot-scope="scope">
+                                <span
+                                    >{{ scope.row.attendanceDate }}
+                                    {{ scope.row.attendanceTime }}</span
+                                >
+                            </template>
                         </el-table-column>
                     </el-table>
                 </td>
@@ -133,16 +144,16 @@ export default {
             dateTabIndex: 0,
             kqX: [],
             kqY: [],
+            kqYAll: [],
 
             rcX: [],
             rcY: [],
 
-            ageX: [],
-            ageY: [],
+            ageData: [],
 
             inoutX: [],
             inoutY: [],
-            inoutTab: ["全部", "进场", "出场"],
+            inoutTab: ["全部", "出场", "进场"],
             inoutIndex: 0,
             outInStatus: "",
             inoutData: [],
@@ -160,9 +171,9 @@ export default {
     created() {
         this.getData();
         this.getAttendMonth();
-        this.getAttendYear();
         this.workType();
         this.outIn();
+        this.age();
     },
     mounted() {
         this.$nextTick(() => {
@@ -200,45 +211,20 @@ export default {
             get(`/api/realname/home/attend-month`).then((res) => {
                 if (res.isSuccess) {
                     let arrX = [],
+                        arrAll = [],
                         arrY = [];
                     res.data.forEach((item) => {
-                        arrX.push(item.day);
+                        arrX.push(item.day + "号");
                         arrY.push(item.count);
+                        arrAll.push(item.employeeCount);
                     });
                     this.kqX = arrX;
                     this.kqY = arrY;
-                }
-            });
-        },
+                    this.kqYAll = arrAll;
 
-        // 人员统计-月
-        getEmployeeMonth() {
-            get(`/api/realname/home/employee-month`).then((res) => {
-                if (res.isSuccess) {
-                    let arrX = [],
-                        arrY = [];
-                    res.data.forEach((item) => {
-                        arrX.push(item.day);
-                        arrY.push(item.count);
+                    this.$nextTick(() => {
+                        this.checkEchart();
                     });
-                    this.kqX = arrX;
-                    this.kqY = arrY;
-                }
-            });
-        },
-
-        // 人员统计-年
-        getEmployeeYear() {
-            get(`/api/realname/home/employee-year`).then((res) => {
-                if (res.isSuccess) {
-                    let arrX = [],
-                        arrY = [];
-                    res.data.forEach((item) => {
-                        arrX.push(item.day);
-                        arrY.push(item.count);
-                    });
-                    this.kqX = arrX;
-                    this.kqY = arrY;
                 }
             });
         },
@@ -248,13 +234,20 @@ export default {
             get(`/api/realname/home/attend-year`).then((res) => {
                 if (res.isSuccess) {
                     let arrX = [],
+                        arrAll = [],
                         arrY = [];
                     res.data.forEach((item) => {
-                        arrX.push(item.month);
+                        arrX.push(item.month + "月");
                         arrY.push(item.count);
+                        arrAll.push(item.employeeCount);
                     });
                     this.kqX = arrX;
                     this.kqY = arrY;
+                    this.kqYAll = arrAll;
+
+                    this.$nextTick(() => {
+                        this.checkEchart();
+                    });
                 }
             });
         },
@@ -280,7 +273,31 @@ export default {
 
                     this.rcX = arrX;
                     this.rcY = arrY;
-                    this.rcEchart();
+
+                    this.$nextTick(() => {
+                        this.rcEchart();
+                    });
+                }
+            });
+        },
+
+        // 年龄统计
+        age() {
+            get(`/api/realname/home/age-count`).then((res) => {
+                if (res.isSuccess) {
+                    let arr = [];
+                    res.data.forEach((item) => {
+                        arr.push({
+                            value: item.count,
+                            name: item.age,
+                        });
+                    });
+
+                    this.ageData = arr;
+
+                    this.$nextTick(() => {
+                        this.ageEchart();
+                    });
                 }
             });
         },
@@ -292,19 +309,25 @@ export default {
             this.outIn();
         },
         outIn() {
+            this.loading = true;
             get(`/api/realname/home/employee-in-outs`, {
                 status: this.outInStatus,
                 size: 5,
-            }).then((res) => {
-                if (res.isSuccess) {
-                }
-            });
+            })
+                .then((res) => {
+                    if (res.isSuccess) {
+                        this.inoutData = res.data;
+                        this.loading = false;
+                    }
+                })
+                .catch((err) => {
+                    this.loading = false;
+                });
         },
 
         // 入场人员统计
         rcEchart() {
             this.mychart1 = echarts.init(document.getElementById("rcEchart"));
-            console.log(this.rcY);
 
             let typeData = this.rcX;
             let colors = [
@@ -403,6 +426,9 @@ export default {
                     right: 10,
                     bottom: 70,
                 },
+                tooltip: {
+                    trigger: "axis",
+                },
                 legend: {
                     data: ["总人数", "打卡人数"],
                     bottom: 0,
@@ -436,13 +462,13 @@ export default {
                     {
                         name: "总人数",
                         type: "line",
-                        data: [220, 182, 191, 234, 290, 330, 310],
+                        data: this.kqYAll,
                         smooth: true,
                     },
                     {
                         name: "打卡人数",
                         type: "line",
-                        data: [120, 132, 101, 134, 90, 230, 210],
+                        data: this.kqY,
                         smooth: true,
                     },
                 ],
@@ -470,13 +496,7 @@ export default {
                         type: "pie",
                         radius: "80%",
                         center: ["40%", "50%"],
-                        data: [
-                            { value: 1048, name: "18-29岁" },
-                            { value: 735, name: "30-39岁" },
-                            { value: 580, name: "40-49岁" },
-                            { value: 484, name: "50-54岁" },
-                            { value: 300, name: "55岁以上" },
-                        ],
+                        data: this.ageData,
                         emphasis: {
                             itemStyle: {
                                 shadowBlur: 10,
@@ -534,7 +554,7 @@ export default {
                             font-size: 40px;
                             font-family: Bahnschrift;
                             font-weight: bold;
-                            line-height: 56px;
+                            line-height: 66px;
                             display: block;
                         }
                         span {

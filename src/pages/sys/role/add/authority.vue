@@ -16,6 +16,7 @@
 
 
 <script>
+import { get } from "~/config/fetch.js";
 export default {
     data() {
         return {
@@ -70,8 +71,8 @@ export default {
                 },
             ],
             defaultProps: {
-                children: "children",
-                label: "label",
+                children: "menuList",
+                label: "menuName",
             },
         };
     },
@@ -90,11 +91,18 @@ export default {
         this.getData();
         this.checkEvent();
     },
+    computed: {
+        userId() {
+            return this.$store.state.userId;
+        },
+    },
     methods: {
         getData() {
-            get(`/api/realname/project/project-dictionary`).then((res) => {
+            get("/api/realname/menu/menu-list", {
+                UserId: this.userId,
+            }).then((res) => {
                 if (res.isSuccess) {
-                    this.data = res.data;
+                    this.menuIdList = res.data;
                 }
             });
         },

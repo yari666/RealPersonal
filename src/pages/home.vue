@@ -9,37 +9,46 @@
 
             <el-menu
                 :default-active="path"
-                @select="handleSelect"
                 background-color="transparent"
                 text-color="#fff"
                 active-text-color="#ffd04b"
                 router
                 unique-opened
             >
-                <el-submenu
-                    v-if="menuList.length"
-                    :index="item.menuCode"
-                    v-for="item in menuList"
-                    :key="item.menuCode"
-                >
-                    <template slot="title">
-                        <i :class="'el-icon-' + item.menuIcon"></i>
-                        <span>{{ item.menuName }}</span>
-                    </template>
-
-                    <el-menu-item
-                        :index="subItem.menuUrl"
-                        v-for="subItem in item.menuList"
-                        :key="subItem.menuUrl"
+                <template v-for="item in menuList">
+                    <el-submenu
+                        :index="item.menuUrl"
+                        :key="item.menuCode"
+                        v-if="item.menuList && item.menuList.length"
                     >
                         <template slot="title">
-                            <i :class="'el-icon-' + subItem.menuIcon"></i>
-                            <span>{{ subItem.menuName }}</span>
+                            <i :class="'el-icon-' + item.menuIcon"></i>
+                            <span>{{ item.menuName }}</span>
                         </template>
-                    </el-menu-item>
-                </el-submenu>
 
-                <el-menu-item index="/home">
+                        <el-menu-item
+                            :index="subItem.menuUrl"
+                            v-for="subItem in item.menuList"
+                            :key="subItem.menuUrl"
+                        >
+                            <template slot="title">
+                                <i :class="'el-icon-' + subItem.menuIcon"></i>
+                                <span>{{ subItem.menuName }}</span>
+                            </template>
+                        </el-menu-item>
+                    </el-submenu>
+
+                    <el-menu-item
+                        v-else
+                        :key="item.menuCode"
+                        :index="item.menuUrl"
+                    >
+                        <i :class="'el-icon-' + item.menuIcon"></i>
+                        <span slot="title">{{ item.menuName }}</span>
+                    </el-menu-item>
+                </template>
+
+                <!-- <el-menu-item index="/home">
                     <i class="el-icon-house"></i>
                     <span slot="title">首页</span>
                 </el-menu-item>
@@ -126,7 +135,7 @@
                     <el-menu-item index="/sys/worktype"
                         >工种/证书字典</el-menu-item
                     >
-                </el-submenu>
+                </el-submenu> -->
             </el-menu>
         </el-aside>
 
@@ -248,10 +257,6 @@ export default {
                 }
             );
         },
-
-        handleSelect(key, keyPath) {
-            // console.log(key, keyPath);
-        },
     },
 };
 </script>
@@ -351,7 +356,6 @@ export default {
     background: #f6f6f6;
     padding: 0;
     height: calc(~"100vh - 68px");
-    overflow: hidden;
 }
 </style>
 

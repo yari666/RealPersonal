@@ -119,7 +119,6 @@ export default {
     box-sizing: border-box;
     background: #fff;
     border-radius: 8px;
-    overflow: hidden;
     .tabs {
         margin-top: 20px;
     }

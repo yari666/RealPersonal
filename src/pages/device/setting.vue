@@ -105,7 +105,7 @@ export default {
             similarity_threshold: 80,
             temperature_mode: "Fahrenheit",
             temperature_compensation: 0,
-            temperature_threshold: "37.5℃",
+            temperature_threshold: 37.5,
             voice_broadcast: true,
             fill_light: false,
             volume: 70,
@@ -165,6 +165,7 @@ export default {
                 fill_light: this.fill_light,
                 volume: this.volume,
                 feature_mode: this.feature_mode,
+                mac_address: "",
             };
             post(
                 `/api/realname/device/deivce-config/${this.currentItem.id}`,

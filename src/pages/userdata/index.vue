@@ -15,7 +15,7 @@
 
             <div class="fr">
                 <el-button type="primary" @click="getData">同步</el-button>
-                <el-button type="primary">导出</el-button>
+                <!-- <el-button type="primary">导出</el-button> -->
             </div>
         </div>
 
@@ -37,18 +37,15 @@
             </el-table-column>
             <el-table-column prop="currentAddress" label="现居住地址">
             </el-table-column>
-            <el-table-column label="苏康码状态">绿码</el-table-column>
-            <el-table-column prop="address" label="操作" width="220">
-                <template>
+            <el-table-column label="操作">
+                <template slot-scope="scope">
                     <el-button
                         type="primary"
                         size="small"
-                        @click="addClass('edit')"
+                        @click="addClass(scope.row)"
                         plain
                         >查看</el-button
                     >
-                    <el-button type="primary" size="small">编辑</el-button>
-                    <el-button type="danger" size="small">删除</el-button>
                 </template></el-table-column
             >
         </el-table>
@@ -69,17 +66,16 @@
             :close-on-click-modal="false"
             title="人员信息"
             :visible.sync="showAdd"
-            v-if="showAdd"
             class="dialog"
         >
-            <add></add>
+            <add v-if="showAdd" :currentItem="currentItem"></add>
         </el-dialog>
     </div>
 </template>
 
 <script>
-import add from "./add/index";
 import { get } from "~/config/fetch.js";
+import add from "./add/base";
 
 export default {
     data() {
@@ -94,6 +90,15 @@ export default {
                 SkipCount: 0, //跳过的记录数
                 MaxResultCount: 10, //展示数量
             },
+            currentItem: {
+                currentAddress: null,
+                gender: 1,
+                id: "",
+                idNumber: "",
+                national: "",
+                personName: "",
+                phoneNumber: "",
+            },
         };
     },
     components: { add },
@@ -101,8 +106,8 @@ export default {
         this.getData();
     },
     methods: {
-        addClass(type) {
-            this.openType = type;
+        addClass(item) {
+            this.currentItem = item;
             this.showAdd = true;
         },
         getData() {

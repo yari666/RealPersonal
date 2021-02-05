@@ -3,10 +3,10 @@
         <div class="search-box">
             <el-form :inline="true" class="demo-form-inline fl">
                 <el-form-item label="关键词">
-                    <el-input placeholder="关键词"></el-input>
+                    <el-input placeholder="关键词" v-model="KeyWord"></el-input>
                 </el-form-item>
-                <el-form-item label="类别">
-                    <el-select placeholder="类别">
+                <el-form-item label="来源">
+                    <el-select placeholder="来源" v-model="from">
                         <el-option label="群耀" value="shanghai"></el-option>
                         <el-option label="富友" value="beijing"></el-option>
                         <el-option label="新合盛" value="beijing"></el-option>
@@ -93,6 +93,7 @@ export default {
             tableData: [],
             totalCount: 0,
             KeyWord: "",
+            from: "",
             pagination: {
                 SkipCount: 0, //跳过的记录数
                 MaxResultCount: 10, //展示数量
