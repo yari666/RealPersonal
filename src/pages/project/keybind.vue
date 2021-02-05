@@ -1,7 +1,7 @@
 <template>
     <el-form :model="form" :rules="rules" :inline="true" ref="form">
         <el-form-item label="指纹密钥" prop="key">
-            <el-input v-model="form.key"></el-input>
+            <el-input v-model="form.key" maxlength="50"></el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="onSubmit('form')">提交</el-button>
