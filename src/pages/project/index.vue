@@ -59,6 +59,8 @@
                     }}</span>
                 </template>
             </el-table-column>
+            <el-table-column prop="fingerPrint" label="项目指纹">
+            </el-table-column>
 
             <el-table-column prop="coveredArea" label="建筑面积（平方米）">
             </el-table-column>
@@ -82,7 +84,12 @@
                         plain
                         >查看</el-button
                     >
-                    <el-button size="small" plain>指纹绑定</el-button>
+                    <el-button
+                        size="small"
+                        type="warning"
+                        @click="addKey(scope.row.id, scope.row.fingerPrint)"
+                        >指纹绑定</el-button
+                    >
                 </template></el-table-column
             >
         </el-table>
@@ -99,7 +106,6 @@
         </div>
 
         <!-- 弹框 -->
-        <!-- 弹框内容 -->
         <el-dialog
             :close-on-click-modal="false"
             title="项目详情"
@@ -107,12 +113,27 @@
         >
             <add v-if="showAdd" :currentId="currentId"></add>
         </el-dialog>
+
+        <!-- 指纹绑定 -->
+        <el-dialog
+            :close-on-click-modal="false"
+            title="指纹绑定"
+            :visible.sync="showKey"
+        >
+            <key-bind
+                v-if="showKey"
+                :currentId="currentId"
+                :fingerPrint="currentFingerprint"
+                @ok="closeOk"
+            ></key-bind>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import add from "./add";
 import { get } from "~/config/fetch.js";
+import keyBind from "./keybind";
+import add from "./add";
 
 export default {
     data() {
@@ -121,7 +142,9 @@ export default {
             totalCount: 0,
             tableData: [],
             currentId: "",
+            currentFingerprint: "",
             KeyWord: "",
+            showKey: false,
             pagination: {
                 SkipCount: 0, //跳过的记录数
                 MaxResultCount: 10, //展示数量
@@ -131,7 +154,7 @@ export default {
             area: "",
         };
     },
-    components: { add },
+    components: { add, keyBind },
     created() {
         this.getData();
         this.getArea();
@@ -145,9 +168,18 @@ export default {
             });
         },
         addClass(id) {
-            console.log(id);
             this.currentId = id;
             this.showAdd = true;
+        },
+
+        addKey(id, finger) {
+            this.showKey = true;
+            this.currentId = id;
+            this.currentFingerprint = finger;
+        },
+        closeOk() {
+            this.showKey = false;
+            this.getData();
         },
 
         getData() {

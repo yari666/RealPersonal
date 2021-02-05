@@ -5,6 +5,8 @@
             show-checkbox
             node-key="id"
             :props="defaultProps"
+            :default-checked-keys="checkData"
+            ref="trees"
         >
         </el-tree>
         <div class="button">
@@ -74,6 +76,7 @@ export default {
                 children: "menuList",
                 label: "menuName",
             },
+            checkData: [],
         };
     },
     props: ["currentItem"],
@@ -89,6 +92,7 @@ export default {
     },
     created() {
         this.getData();
+        this.getChecked();
         this.checkEvent();
     },
     computed: {
@@ -106,6 +110,17 @@ export default {
                 }
             });
         },
+
+        getChecked() {
+            get("/api/realname/menu/role-menu-tree", {
+                roleid: this.currentItem.id,
+            }).then((res) => {
+                if (res.isSuccess) {
+                    this.checkData = res.data;
+                }
+            });
+        },
+
         checkEvent() {
             let arr = [];
             this.currentItem.projectIdList.forEach((i) => {
@@ -114,14 +129,20 @@ export default {
             this.checkedIndex = arr;
         },
         onSubmit() {
+            let checkKey = Object.assign(
+                this.checkData,
+                this.$refs.trees.getCheckedKeys()
+            );
             let param = {
                 roleCode: this.currentItem.roleCode,
                 roleName: this.currentItem.roleName,
                 isActive: this.currentItem.isActive,
                 remark: this.currentItem.remark,
-                selectedMenu: this.currentItem.menuIdList.map((i) => i.id),
+                selectedMenu: checkKey,
                 projectids: this.checkedIndex,
             };
+
+            console.log(JSON.stringify(param));
             this.$emit("editData", param);
         },
         cancel() {

@@ -143,9 +143,9 @@
             <!---顶部----->
             <el-header style="height: 68px">
                 <div class="fr">
-                    <div class="weather fl">
+                    <!-- <div class="weather fl">
                         <i class="el-icon-sunny"></i>晴 24℃
-                    </div>
+                    </div> -->
                     <div class="user fl">
                         <el-avatar
                             :size="24"
@@ -154,7 +154,7 @@
                         {{ this.$store.state.userName }}
                     </div>
 
-                    <div class="email fl"><i class="icons"></i></div>
+                    <!-- <div class="email fl"><i class="icons"></i></div> -->
 
                     <!-- 退出 -->
                     <el-dropdown trigger="click" @command="handleCommand">
@@ -162,9 +162,9 @@
                             <i class="el-icon-setting setting"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="revisepass"
+                            <!-- <el-dropdown-item command="revisepass"
                                 >修改密码</el-dropdown-item
-                            >
+                            > -->
                             <el-dropdown-item command="exit"
                                 >退出登录</el-dropdown-item
                             >

@@ -12,6 +12,10 @@
         <el-form-item label="菜单图标">
             <el-input v-model="form.menuIcon"></el-input>
         </el-form-item>
+        <el-form-item label="菜单序号">
+            <el-input v-model="form.sortNumb"></el-input
+            ><span>菜单序号代表菜单项的显示顺序，从小到大排列。</span>
+        </el-form-item>
         <el-form-item label="父级菜单">
             <el-select
                 placeholder="选择父级菜单"
@@ -53,6 +57,7 @@ export default {
                 menuParentId: "",
                 menuUrl: "",
                 menuIcon: "",
+                sortNumb: 0,
                 isActive: true,
             },
             menuList: [],
@@ -109,17 +114,18 @@ export default {
             let _this = this;
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    let param = {
-                        menuCode: _this.form.menuCode,
-                        menuName: _this.form.menuName,
-                        menuParentId: _this.form.menuParentId,
-                        menuUrl: _this.form.menuUrl,
-                        menuIcon: _this.form.menuIcon,
-                        isActive: _this.form.isActive,
-                    };
+                    // let param = {
+                    //     menuCode: _this.form.menuCode,
+                    //     menuName: _this.form.menuName,
+                    //     menuParentId: _this.form.menuParentId,
+                    //     menuUrl: _this.form.menuUrl,
+                    //     menuIcon: _this.form.menuIcon,
+                    //     isActive: _this.form.isActive,
+                    //     sortNumb: _this.form.sortNumb,
+                    // };
                     if (_this.openType == "add") {
                         // 新增
-                        post(`/api/realname/menu`, param).then((res) => {
+                        post(`/api/realname/menu`, _this.form).then((res) => {
                             if (res.isSuccess) {
                                 _this.$message({
                                     message: "新增成功！",
@@ -132,7 +138,7 @@ export default {
                         // 编辑
                         put(
                             `/api/realname/menu/${_this.currentItem.id}`,
-                            param
+                            _this.form
                         ).then((res) => {
                             if (res.isSuccess) {
                                 _this.$message({

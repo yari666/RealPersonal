@@ -25,7 +25,7 @@
             height="72vh"
             v-loading="loading"
         >
-            <el-table-column type="index" label="序号"> </el-table-column>
+            <el-table-column type="index" label="菜单序号"> </el-table-column>
             <el-table-column prop="menuCode" label="菜单编号">
             </el-table-column>
             <el-table-column prop="menuName" label="菜单名称">
@@ -110,6 +110,7 @@ export default {
                 menuUrl: "",
                 menuIcon: "",
                 isActive: true,
+                sortNumb: "",
                 id: "",
             },
         };
