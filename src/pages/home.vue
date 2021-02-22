@@ -248,7 +248,7 @@ export default {
         },
     },
     created() {
-        this.nowDate = timestamp("YYYY-MM-DD HH:mm:ss", new Date());
+        this.nowDate = timestamp("YYYY年MM月DD日", new Date());
         this.getMenu();
     },
     methods: {

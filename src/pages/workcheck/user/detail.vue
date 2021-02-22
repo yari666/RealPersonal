@@ -49,7 +49,7 @@
                 :label="item"
                 align="center"
             >
-                <el-table-column :label="星期一" align="center">
+                <el-table-column label="星期一" align="center">
                     <template slot-scope="scope">
                         <span class="empty" v-if="scope.row.data[index] == ''"
                             >-</span
