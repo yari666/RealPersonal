@@ -58,6 +58,11 @@ const routes = [
                 component: () => import('~/pages/guest/guest-user/index'),
             },
             {
+                path: '/guest/guestuser/:employeeId',
+                name: 'UserDetail',
+                component: () => import('~/pages/userdetail/index'),
+            },
+            {
                 path: '/guest/guestclass',
                 name: 'GuestClass',
                 component: () => import('~/pages/guest/guest-class/index'),
@@ -67,6 +72,11 @@ const routes = [
                 path: '/workcheck/user',
                 name: 'WorkcheckUser',
                 component: () => import('~/pages/workcheck/user/index'),
+            },
+            {
+                path: '/workcheck/user/:projectId',
+                name: 'UserDetail',
+                component: () => import('~/pages/workcheck/user/detail'),
             },
             {
                 path: '/workcheck/clockin',

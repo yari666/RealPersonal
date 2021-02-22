@@ -28,6 +28,12 @@
             </el-form>
 
             <div class="fr">
+                <el-button
+                    type="primary"
+                    @click="addClass"
+                    v-if="isAdd == 'true'"
+                    >添加</el-button
+                >
                 <el-button type="primary" @click="getData">同步</el-button>
                 <el-button type="primary" @click="exportData">导出</el-button>
             </div>
@@ -75,20 +81,27 @@
                     <span>{{ scope.row.constructionUnitContactPhone }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="200">
+            <el-table-column label="操作" width="280">
                 <template slot-scope="scope">
                     <el-button
                         type="primary"
                         size="small"
-                        @click="addClass(scope.row.id)"
+                        @click="look(scope.row)"
                         plain
                         >查看</el-button
                     >
+
                     <el-button
                         size="small"
                         type="warning"
                         @click="addKey(scope.row.id, scope.row.fingerPrint)"
                         >指纹绑定</el-button
+                    >
+                    <el-button
+                        type="danger"
+                        size="small"
+                        @click="delData(scope.row.id)"
+                        >删掉</el-button
                     >
                 </template></el-table-column
             >
@@ -108,10 +121,17 @@
         <!-- 弹框 -->
         <el-dialog
             :close-on-click-modal="false"
-            title="项目详情"
+            :title="readOnly ? '项目详情' : '添加项目'"
             :visible.sync="showAdd"
         >
-            <add v-if="showAdd" :currentId="currentId"></add>
+            <add
+                v-if="showAdd"
+                :currentId="currentId"
+                :currentItem="currentItem"
+                :readOnly="readOnly"
+                @cancel="closeCancel"
+                @ok="closeOk"
+            ></add>
         </el-dialog>
 
         <!-- 指纹绑定 -->
@@ -131,9 +151,10 @@
 </template>
 
 <script>
-import { get } from "~/config/fetch.js";
+import { get, del } from "~/config/fetch.js";
 import keyBind from "./keybind";
 import add from "./add";
+import { exportData } from "~/utils/index";
 
 export default {
     data() {
@@ -141,6 +162,7 @@ export default {
             showAdd: false,
             totalCount: 0,
             tableData: [],
+            loading: false,
             currentId: "",
             currentFingerprint: "",
             KeyWord: "",
@@ -152,12 +174,34 @@ export default {
 
             areaData: [],
             area: "",
+            readOnly: false,
+            currentItem: {
+                id: "",
+                projectCode: "",
+                projectName: "",
+                contractRecordNumber: "",
+                city: "",
+                township: "",
+                villagesAndTowns: "",
+                address: "",
+                coveredArea: 0,
+                projectCost: 0,
+                constructionUnitName: "",
+                constructionUnitSocialCreditCode: "",
+                constructionUnitContact: "",
+                constructionUnitContactPhone: "",
+            },
         };
     },
     components: { add, keyBind },
     created() {
         this.getData();
         this.getArea();
+    },
+    computed: {
+        isAdd() {
+            return this.$store.state.isAdd;
+        },
     },
     methods: {
         getArea() {
@@ -167,8 +211,13 @@ export default {
                 }
             });
         },
-        addClass(id) {
-            this.currentId = id;
+        addClass() {
+            this.readOnly = false;
+            this.showAdd = true;
+        },
+        look(item) {
+            this.currentItem = item;
+            this.readOnly = true;
             this.showAdd = true;
         },
 
@@ -179,7 +228,15 @@ export default {
         },
         closeOk() {
             this.showKey = false;
+            this.readOnly = true;
+            this.showAdd = false;
             this.getData();
+        },
+
+        closeCancel() {
+            this.showKey = false;
+            this.readOnly = true;
+            this.showAdd = false;
         },
 
         getData() {
@@ -206,6 +263,23 @@ export default {
                     this.loading = false;
                 });
         },
+        delData(id) {
+            this.$confirm("确认要删除？")
+                .then((_) => {
+                    del(`/api/realname/project/${id}`).then((res) => {
+                        if (res.isSuccess) {
+                            this.$message({
+                                message: "删除成功！",
+                                type: "success",
+                            });
+                            this.getData();
+                        }
+                    });
+                })
+                .catch((_) => {
+                    console.log(_);
+                });
+        },
         // 监听 pageSize改变的事件
         handleSizeChange(newSize) {
             this.pagination.MaxResultCount = newSize;
@@ -222,29 +296,11 @@ export default {
 
         // 导出
         exportData() {
-            get(`/api/realname/project/export-projects`, {
-                KeyWord: this.KeyWord,
-                responseType: "blob",
-            }).then((res) => {
-                var content = res.data;
-                var blob = new Blob([content]);
-                var fileName = "项目管理.xlsx"; //要保存的文件名称
-                if ("download" in document.createElement("a")) {
-                    // 非IE下载
-                    var elink = document.createElement("a");
-                    elink.download = fileName;
-                    elink.style.display = "none";
-                    elink.href = URL.createObjectURL(blob);
-                    document.body.appendChild(elink);
-                    elink.click();
-                    URL.revokeObjectURL(elink.href); // 释放URL 对象
-                    document.body.removeChild(elink);
-                } else {
-                    // IE10+下载
-                    navigator.msSaveBlob(blob, fileName);
-                }
-                console.log(res);
-            });
+            exportData(
+                `/api/realname/project/export-projects`,
+                this.KeyWord,
+                "项目管理"
+            );
         },
     },
 };

@@ -204,17 +204,6 @@ export default {
             this.getData();
         },
 
-        // 导出
-        exportData() {
-            get(`/api/realname/project/export-projects`, {
-                FileName: "D:\\bya\\raaaaaa.xlsx",
-            }).then((res) => {
-                if (res.isSuccess) {
-                    console.log(res);
-                }
-            });
-        },
-
         delData(id) {
             this.$confirm("确认要删除？")
                 .then((_) => {

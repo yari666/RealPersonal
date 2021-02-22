@@ -1,5 +1,12 @@
 <template>
-    <el-form :model="form" :rules="rules" :inline="true" ref="form">
+    <el-form
+        :model="form"
+        :rules="rules"
+        :inline="true"
+        ref="form"
+        label-width="100px"
+        class="keybind"
+    >
         <el-form-item label="指纹密钥" prop="key">
             <el-input v-model="form.key" maxlength="50"></el-input>
         </el-form-item>
@@ -8,6 +15,20 @@
         </el-form-item>
     </el-form>
 </template>
+
+<style lang="less">
+.keybind {
+    .el-form-item {
+        width: 25%;
+    }
+    .is-required {
+        width: 70%;
+        .el-form-item__content {
+            width: calc(~"100% - 100px");
+        }
+    }
+}
+</style>
 
 <script>
 import { put } from "~/config/fetch.js";

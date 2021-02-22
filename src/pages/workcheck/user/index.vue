@@ -2,38 +2,40 @@
     <div class="mainCon">
         <div class="search-box">
             <el-form :inline="true" class="demo-form-inline fl">
-                <el-form-item label="姓名">
+                <el-form-item label="关键词">
                     <el-input
-                        placeholder="姓名"
-                        style="width: 120px"
+                        placeholder="搜索关键词"
+                        v-model="KeyWord"
                     ></el-input>
                 </el-form-item>
-                <el-form-item label="企业">
-                    <el-select placeholder="企业" style="width: 180px">
-                        <el-option label="群耀" value="shanghai"></el-option>
-                        <el-option label="富友" value="beijing"></el-option>
-                        <el-option label="新合盛" value="beijing"></el-option>
+                <!-- 
+                <el-form-item label="所属项目">
+                    <el-select
+                        placeholder="请选择所属项目"
+                        v-model="projectId"
+                        style="width: 100%"
+                    >
+                        <el-option
+                            v-for="item in projectData"
+                            :key="item.id"
+                            :label="item.projectName"
+                            :value="item.id"
+                        ></el-option>
                     </el-select>
-                </el-form-item>
-                <el-form-item label="项目">
-                    <el-select placeholder="项目" style="width: 180px">
-                        <el-option label="群耀" value="shanghai"></el-option>
-                        <el-option label="富友" value="beijing"></el-option>
-                        <el-option label="新合盛" value="beijing"></el-option>
-                    </el-select>
-                </el-form-item>
+                </el-form-item> -->
 
-                <el-form-item label="考勤日期">
+                <el-form-item label="考勤年月">
                     <el-date-picker
-                        style="width: 180px"
-                        v-model="value6"
-                        type="date"
-                        placeholder="选择日期"
+                        v-model="SearchDate"
+                        type="month"
+                        placeholder="选择月"
+                        format="yyyy-MM"
+                        value-format="yyyy-MM"
                     >
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary">查询</el-button>
+                    <el-button type="primary" @click="getData">查询</el-button>
                 </el-form-item>
             </el-form>
 
@@ -42,228 +44,135 @@
             </div>
         </div>
 
-        <el-table :data="tableData3">
-            <el-table-column prop="name" label="姓名" width="71">
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
-            </el-table-column>
-            <el-table-column label="1号" width="48">
-                <el-table-column prop="zip" label="星期一" width="48">
-                </el-table-column>
+        <el-table
+            :data="tableData"
+            style="width: 100%"
+            height="72vh"
+            v-loading="loading"
+        >
+            <el-table-column prop="projectName" label="所属项目">
             </el-table-column>
             <el-table-column
-                label="时长总计"
-                prop="zip"
-                width="48"
-            ></el-table-column>
+                prop="employeeCount"
+                align="center"
+                label="总人数(人)"
+            >
+            </el-table-column>
             <el-table-column
-                label="天数总计"
-                prop="zip"
-                width="48"
-            ></el-table-column>
+                prop="totalDuration"
+                align="center"
+                label="时长总计(小时)"
+            >
+            </el-table-column>
+            <el-table-column
+                prop="totalDay"
+                align="center"
+                label="天数总计(天)"
+            >
+            </el-table-column>
+            <el-table-column label="操作" width="100">
+                <template slot-scope="scope">
+                    <el-button
+                        type="primary"
+                        size="small"
+                        plain
+                        @click="go(scope.row.projectId)"
+                        >查看</el-button
+                    >
+                </template>
+            </el-table-column>
         </el-table>
-        <div class="tips">
-            提示：- 表示该天无考勤数据，⚪ 标识该天考勤数据异常
+
+        <div class="pagination">
+            <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :page-size="10"
+                layout="total, prev, pager, next, jumper"
+                :total="totalCount"
+            >
+            </el-pagination>
         </div>
     </div>
 </template>
 
 <script>
+import { get } from "~/config/fetch.js";
+const timestamp = require("time-stamp");
+
 export default {
     data() {
         return {
             openType: "add",
             showAdd: false,
-            value6: "",
-            tableData3: [
-                {
-                    date: "2016-05-03",
-                    name: "王小虎",
-                    province: "上海",
-                    city: "普陀区",
-                    address: "上海市普陀区金沙江路 1518 弄",
-                    zip: 8,
-                },
-                {
-                    date: "2016-05-02",
-                    name: "王小虎",
-                    province: "上海",
-                    city: "普陀区",
-                    address: "上海市普陀区金沙江路 1518 弄",
-                    zip: 8,
-                },
-                {
-                    date: "2016-05-04",
-                    name: "王小虎",
-                    province: "上海",
-                    city: "普陀区",
-                    address: "上海市普陀区金沙江路 1518 弄",
-                    zip: 8,
-                },
-                {
-                    date: "2016-05-01",
-                    name: "王小虎",
-                    province: "上海",
-                    city: "普陀区",
-                    address: "上海市普陀区金沙江路 1518 弄",
-                    zip: 8,
-                },
-                {
-                    date: "2016-05-08",
-                    name: "王小虎",
-                    province: "上海",
-                    city: "普陀区",
-                    address: "上海市普陀区金沙江路 1518 弄",
-                    zip: 8,
-                },
-                {
-                    date: "2016-05-06",
-                    name: "王小虎",
-                    province: "上海",
-                    city: "普陀区",
-                    address: "上海市普陀区金沙江路 1518 弄",
-                    zip: 8,
-                },
-                {
-                    date: "2016-05-07",
-                    name: "王小虎",
-                    province: "上海",
-                    city: "普陀区",
-                    address: "上海市普陀区金沙江路 1518 弄",
-                    zip: 8,
-                },
-            ],
+            loading: false,
+            SearchDate: new Date(),
+            projectData: [],
+            projectId: "",
+            tableData: [],
+            totalCount: 0,
+            KeyWord: "",
+            pagination: {
+                SkipCount: 0, //跳过的记录数
+                MaxResultCount: 10, //展示数量
+            },
         };
     },
+    created() {
+        this.getData();
+    },
     methods: {
-        addClass(type) {
-            this.openType = type;
-            this.showAdd = true;
+        go(id) {
+            this.$router.push({
+                path:
+                    "/workcheck/user/" +
+                    id +
+                    "?SearchDate=" +
+                    timestamp("YYYY-MM", new Date(this.SearchDate)),
+            });
+        },
+        getData() {
+            this.loading = true;
+            get(
+                "/api/realname/attendance-clock/project-duration",
+                Object.assign(
+                    {
+                        KeyWord: this.KeyWord,
+                        Sorting: "",
+                        SearchDate: this.SearchDate,
+                    },
+                    this.pagination
+                )
+            )
+                .then((res) => {
+                    if (res.isSuccess) {
+                        this.tableData = res.data.items;
+                        this.totalCount = res.data.totalCount;
+                        this.loading = false;
+                    }
+                })
+                .catch((err) => {
+                    this.loading = false;
+                });
+        },
+        // 监听 pageSize改变的事件
+        handleSizeChange(newSize) {
+            this.pagination.MaxResultCount = newSize;
+            this.pagination.SkipCount = 0;
+            this.getData();
+        },
+        // 监听 页码值
+        handleCurrentChange(newPage) {
+            console.log(newPage);
+            this.pagination.SkipCount =
+                (newPage - 1) * this.pagination.MaxResultCount;
+            this.getData();
         },
     },
 };
 </script>
 
 <style lang="less" scoped>
-.tips {
-    font-size: 12px;
-    margin-top: 10px;
-    color: #409eff;
-}
 .mainCon {
     margin: 20px;
     padding: 20px;

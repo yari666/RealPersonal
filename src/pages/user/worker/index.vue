@@ -95,7 +95,7 @@
 
         <el-dialog
             :close-on-click-modal="false"
-            title="人员信息"
+            title="编辑证书"
             :visible.sync="showCert"
         >
             <edit-box
@@ -111,6 +111,7 @@
 import { get, del } from "~/config/fetch.js";
 import add from "~/pages/userdetail/index";
 import editBox from "./cert";
+import { exportData } from "~/utils/index";
 
 export default {
     data() {
@@ -181,30 +182,12 @@ export default {
 
         // 导出
         exportData() {
-            get(`/api/realname/employee/export-projects`, {
-                KeyWord: this.KeyWord,
-                EmployeeType: 1,
-                responseType: "blob",
-            }).then((res) => {
-                var content = res.data;
-                var blob = new Blob([content]);
-                var fileName = "普通人员.xlsx"; //要保存的文件名称
-                if ("download" in document.createElement("a")) {
-                    // 非IE下载
-                    var elink = document.createElement("a");
-                    elink.download = fileName;
-                    elink.style.display = "none";
-                    elink.href = URL.createObjectURL(blob);
-                    document.body.appendChild(elink);
-                    elink.click();
-                    URL.revokeObjectURL(elink.href); // 释放URL 对象
-                    document.body.removeChild(elink);
-                } else {
-                    // IE10+下载
-                    navigator.msSaveBlob(blob, fileName);
-                }
-                console.log(res);
-            });
+            exportData(
+                `/api/realname/employee/export-projects`,
+                this.KeyWord,
+                "普通人员",
+                1
+            );
         },
 
         delData(id) {

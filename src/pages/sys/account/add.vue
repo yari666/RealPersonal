@@ -248,7 +248,7 @@ export default {
                         expirationDate:
                             timestamp(
                                 "YYYY-MM-DD",
-                                new Date(_this.form.date1)
+                                new Date(_this.form.date2)
                             ) +
                             " " +
                             timestamp("HH:mm:ss", new Date(_this.form.time2)),

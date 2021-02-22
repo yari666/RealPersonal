@@ -31,6 +31,9 @@
                 <el-button type="primary" @click="addClass('add')"
                     >添加</el-button
                 >
+                <el-button type="warning" @click="addDeviceUser"
+                    >一键下发</el-button
+                >
                 <el-button type="primary" @click="exportData">导出</el-button>
             </div>
         </div>
@@ -50,10 +53,19 @@
             <el-table-column prop="national" label="民族"> </el-table-column>
             <el-table-column label="性别">
                 <template slot-scope="scope">
-                    <span>{{ scope.row.gender == 1 ? "男" : "女" }}</span>
+                    <span>{{
+                        scope.row.gender == 1
+                            ? "男"
+                            : scope.row.gender == 0
+                            ? "女"
+                            : "男"
+                    }}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="teamName" label="工种"> </el-table-column>
+
+            <el-table-column prop="teamName" label="班组"> </el-table-column>
+            <el-table-column prop="workType" label="工种"> </el-table-column>
+
             <el-table-column prop="phoneNumber" label="联系电话">
             </el-table-column>
             <el-table-column prop="name" label="苏康码状态"
@@ -61,7 +73,7 @@
             </el-table-column>
             <el-table-column prop="projectName" label="所属项目">
             </el-table-column>
-            <el-table-column label="操作" width="410px">
+            <el-table-column label="操作" width="320px">
                 <template slot-scope="scope">
                     <el-button
                         type="primary"
@@ -81,6 +93,7 @@
                         type="warning"
                         size="small"
                         @click="deviceBind(scope.row)"
+                        v-if="scope.row.FRect"
                         >联接设备</el-button
                     >
 
@@ -133,6 +146,7 @@
 <script>
 import add from "~/pages/userdetail/info";
 import { get, del, post } from "~/config/fetch.js";
+import { exportData } from "~/utils/index";
 
 export default {
     data() {
@@ -177,6 +191,7 @@ export default {
                 workTypeCategory: "",
                 workType: "",
                 teamName: "",
+                FRect: "",
             },
         };
     },
@@ -212,7 +227,7 @@ export default {
         lookDetail(id) {
             this.currentId = id;
             this.$router.push({
-                path: `/user/worker/${id}?readOnly=true`,
+                path: `/guest/guestuser/${id}?readOnly=true`,
             });
         },
         deviceBind(item) {
@@ -223,6 +238,16 @@ export default {
                 if (res.isSuccess) {
                     this.$message({
                         message: "联接成功！",
+                        type: "success",
+                    });
+                }
+            });
+        },
+        addDeviceUser() {
+            post(`/api/realname/employee/deivce-users`).then((res) => {
+                if (res.isSuccess) {
+                    this.$message({
+                        message: "下发成功！",
                         type: "success",
                     });
                 }
@@ -298,29 +323,12 @@ export default {
 
         // 导出
         exportData() {
-            get(`/api/realname/employee/export-projects`, {
-                KeyWord: this.KeyWord,
-                EmployeeType: 0,
-                responseType: "blob",
-            }).then((res) => {
-                var content = res.data;
-                var blob = new Blob([content]);
-                var fileName = "访客人员.xlsx"; //要保存的文件名称
-                if ("download" in document.createElement("a")) {
-                    // 非IE下载
-                    var elink = document.createElement("a");
-                    elink.download = fileName;
-                    elink.style.display = "none";
-                    elink.href = URL.createObjectURL(blob);
-                    document.body.appendChild(elink);
-                    elink.click();
-                    URL.revokeObjectURL(elink.href); // 释放URL 对象
-                    document.body.removeChild(elink);
-                } else {
-                    // IE10+下载
-                    navigator.msSaveBlob(blob, fileName);
-                }
-            });
+            exportData(
+                `/api/realname/employee/export-projects`,
+                this.KeyWord,
+                "访客人员",
+                2
+            );
         },
     },
 };

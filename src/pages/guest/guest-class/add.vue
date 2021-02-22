@@ -12,7 +12,7 @@
                 @keyup.enter.native="onSubmit('form')"
             ></el-input>
         </el-form-item>
-        <el-form-item label="所属企业" prop="companyId">
+        <!-- <el-form-item label="所属企业" prop="companyId">
             <el-select
                 v-model="form.companyId"
                 placeholder="请选择所属企业"
@@ -26,12 +26,12 @@
                     :value="item.id"
                 ></el-option>
             </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
             <el-button
                 type="primary"
                 @click="onSubmit('form')"
-                @keyup.enter.native="submitForm('form')"
+                @keyup.enter.native="onSubmit('form')"
                 >确定</el-button
             >
             <el-button @click="cancel">取消</el-button>
@@ -48,8 +48,6 @@ export default {
             form: {
                 visitorTeamCode: "",
                 visitorTeamName: "",
-                companyId: "",
-                projectId: "",
             },
             projectList: [],
             companyList: [],
@@ -68,13 +66,13 @@ export default {
                         trigger: "blur",
                     },
                 ],
-                companyId: [
-                    {
-                        required: true,
-                        message: "请选择所属企业",
-                        trigger: "blur",
-                    },
-                ],
+                // companyId: [
+                //     {
+                //         required: true,
+                //         message: "请选择所属企业",
+                //         trigger: "blur",
+                //     },
+                // ],
             },
         };
     },
@@ -84,7 +82,7 @@ export default {
             this.form = {
                 visitorTeamCode: this.currentTeam.visitorTeamCode,
                 visitorTeamName: this.currentTeam.visitorTeamName,
-                companyId: this.currentTeam.companyId,
+                // companyId: this.currentTeam.companyId,
             };
         }
         this.getCompany();

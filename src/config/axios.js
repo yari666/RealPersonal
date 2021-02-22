@@ -28,6 +28,7 @@ service.interceptors.request.use(config => {
 // axios 响应拦截器
 service.interceptors.response.use(
     response => {
+
         return {
             isSuccess: response.status === 200 || response.status === 204,
             data: response.data,
@@ -35,6 +36,7 @@ service.interceptors.response.use(
         };
     },
     error => {
+        console.log(error)
         if (error.response) {
             switch (error.response.status) {
                 case 401: {
@@ -56,6 +58,7 @@ service.interceptors.response.use(
                     break
                 }
                 case 500: {
+
                     Message({
                         message: error.response.data.error.message || 'Error',
                         type: 'error',

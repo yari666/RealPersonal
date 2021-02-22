@@ -29,9 +29,9 @@
             <el-table-column prop="visitorTeamName" label="班组名称">
             </el-table-column>
 
-            <el-table-column prop="companyName" label="所属企业">
-            </el-table-column>
-            <el-table-column prop="address" label="操作">
+            <!-- <el-table-column prop="companyName" label="所属企业">
+            </el-table-column> -->
+            <el-table-column label="操作" width="180">
                 <template slot-scope="scope">
                     <el-button
                         type="primary"
@@ -178,17 +178,6 @@ export default {
             this.pagination.SkipCount =
                 (newPage - 1) * this.pagination.MaxResultCount;
             this.getData();
-        },
-
-        // 导出
-        exportData() {
-            get(`/api/realname/project/export-projects`, {
-                FileName: "D:\\bya\\raaaaaa.xlsx",
-            }).then((res) => {
-                if (res.isSuccess) {
-                    console.log(res);
-                }
-            });
         },
     },
 };

@@ -2,25 +2,25 @@
 
 <template>
     <div class="main">
-        <table border="0" cellspacing="20" cellspadding="0">
-            <tr>
-                <td rowspan="2" class="con1">
+        <el-row :gutter="20">
+            <el-col :span="8">
+                <div class="box con1">
                     <div class="title">统计数据</div>
 
                     <ul class="static">
-                        <li>
+                        <li @click="go('/project')">
                             <b>{{ project }}</b
                             ><span>项目数量</span>
                         </li>
-                        <li>
+                        <li @click="go('/device')">
                             <b>{{ device }}</b
                             ><span>设备总数</span>
                         </li>
-                        <li>
+                        <li @click="go('/device')">
                             <b>{{ deviceOn }}</b
                             ><span>在线设备</span>
                         </li>
-                        <li>
+                        <li @click="go('/device')">
                             <b>{{ deviceOff }}</b
                             ><span>离线设备</span>
                         </li>
@@ -51,75 +51,91 @@
                         <div class="title">今日进场人员统计</div>
                         <div id="rcEchart" class="rcEchart"></div>
                     </div>
-                </td>
+                </div>
+            </el-col>
+            <el-col :span="16">
+                <el-row>
+                    <el-col :span="24">
+                        <div class="box con2">
+                            <div class="title">员工考勤统计</div>
 
-                <td colspan="2" class="con2">
-                    <div class="title">员工考勤统计</div>
-
-                    <ul class="tab1">
-                        <li
-                            :class="dateTabIndex == index ? 'active' : ''"
-                            v-for="(item, index) in dateTab"
-                            :key="index"
-                            @click="changeTab(index)"
-                        >
-                            {{ item }}
-                        </li>
-                    </ul>
-
-                    <div class="statis_box">
-                        <div id="checkEchart" class="checkEchart"></div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td class="con3">
-                    <div class="title">年龄分布图</div>
-                    <div id="ageEchart" class="ageEchart"></div>
-                </td>
-
-                <td class="con4">
-                    <div class="title">进出场人员</div>
-
-                    <ul class="tab1">
-                        <li
-                            :class="inoutIndex == index ? 'active' : ''"
-                            v-for="(item, index) in inoutTab"
-                            :key="index"
-                            @click="changeInoutTab(index)"
-                        >
-                            {{ item }}
-                        </li>
-                    </ul>
-
-                    <el-table
-                        :data="inoutData"
-                        class="table"
-                        v-loading="loading"
-                    >
-                        <el-table-column prop="employeeName" label="姓名">
-                        </el-table-column>
-                        <el-table-column prop="workType" label="工种">
-                        </el-table-column>
-                        <el-table-column label="进/出场">
-                            <template slot-scope="scope">
-                                <span>{{
-                                    scope.row.inOutStatus == 0 ? "出场" : "进场"
-                                }}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="打卡时间" width="160">
-                            <template slot-scope="scope">
-                                <span
-                                    >{{ scope.row.attendanceDate }}
-                                    {{ scope.row.attendanceTime }}</span
+                            <ul class="tab1">
+                                <li
+                                    :class="
+                                        dateTabIndex == index ? 'active' : ''
+                                    "
+                                    v-for="(item, index) in dateTab"
+                                    :key="index"
+                                    @click="changeTab(index)"
                                 >
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </td>
-            </tr>
-        </table>
+                                    {{ item }}
+                                </li>
+                            </ul>
+
+                            <div class="statis_box">
+                                <div id="checkEchart" class="checkEchart"></div>
+                            </div>
+                        </div>
+                    </el-col>
+                </el-row>
+
+                <el-row :gutter="20" style="margin-top: 20px">
+                    <el-col :span="12">
+                        <div class="box con3">
+                            <div class="title">年龄分布图</div>
+                            <div id="ageEchart" class="ageEchart"></div>
+                        </div>
+                    </el-col>
+                    <el-col :span="12">
+                        <div class="box con4">
+                            <div class="title">进出场人员</div>
+
+                            <ul class="tab1">
+                                <li
+                                    :class="inoutIndex == index ? 'active' : ''"
+                                    v-for="(item, index) in inoutTab"
+                                    :key="index"
+                                    @click="changeInoutTab(index)"
+                                >
+                                    {{ item }}
+                                </li>
+                            </ul>
+
+                            <el-table
+                                :data="inoutData"
+                                class="table"
+                                v-loading="loading"
+                            >
+                                <el-table-column
+                                    prop="employeeName"
+                                    label="姓名"
+                                >
+                                </el-table-column>
+                                <el-table-column prop="workType" label="工种">
+                                </el-table-column>
+                                <el-table-column label="进/出场">
+                                    <template slot-scope="scope">
+                                        <span>{{
+                                            scope.row.inOutStatus == 0
+                                                ? "出场"
+                                                : "进场"
+                                        }}</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="打卡时间" width="160">
+                                    <template slot-scope="scope">
+                                        <span
+                                            >{{ scope.row.attendanceDate }}
+                                            {{ scope.row.attendanceTime }}</span
+                                        >
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-col>
+        </el-row>
     </div>
 </template>
 
@@ -214,7 +230,7 @@ export default {
                         arrAll = [],
                         arrY = [];
                     res.data.forEach((item) => {
-                        arrX.push(item.day + "号");
+                        arrX.push(item.day);
                         arrY.push(item.count);
                         arrAll.push(item.employeeCount);
                     });
@@ -237,7 +253,7 @@ export default {
                         arrAll = [],
                         arrY = [];
                     res.data.forEach((item) => {
-                        arrX.push(item.month + "月");
+                        arrX.push(item.month);
                         arrY.push(item.count);
                         arrAll.push(item.employeeCount);
                     });
@@ -287,10 +303,12 @@ export default {
                 if (res.isSuccess) {
                     let arr = [];
                     res.data.forEach((item) => {
-                        arr.push({
-                            value: item.count,
-                            name: item.age,
-                        });
+                        if (item.age) {
+                            arr.push({
+                                value: item.count,
+                                name: item.age,
+                            });
+                        }
                     });
 
                     this.ageData = arr;
@@ -421,13 +439,26 @@ export default {
             let option = {
                 color: ["#FFC831", "#0057BF"],
                 grid: {
-                    left: 60,
+                    left: 40,
                     top: 20,
                     right: 10,
-                    bottom: 70,
+                    bottom: 50,
                 },
                 tooltip: {
                     trigger: "axis",
+                    formatter: function (params) {
+                        var relVal = params[0].name;
+                        for (var i = 0, l = params.length; i < l; i++) {
+                            relVal +=
+                                "<br/>" +
+                                params[i].marker +
+                                params[i].seriesName +
+                                " : " +
+                                params[i].value +
+                                "人";
+                        }
+                        return relVal;
+                    },
                 },
                 legend: {
                     data: ["总人数", "打卡人数"],
@@ -486,6 +517,15 @@ export default {
 
                 tooltip: {
                     trigger: "item",
+                    formatter: function (params) {
+                        var relVal =
+                            params.marker +
+                            params.name +
+                            " : " +
+                            params.value +
+                            "人";
+                        return relVal;
+                    },
                 },
                 legend: {
                     orient: "vertical",
@@ -510,6 +550,10 @@ export default {
 
             this.mychart3.setOption(option);
         },
+
+        go(path) {
+            this.$router.push({ path });
+        },
     },
 };
 </script>
@@ -520,183 +564,179 @@ export default {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-    padding-bottom: 20px;
+    background: #f6f6f6;
+    padding: 20px;
     font-size: 14px;
     font-weight: 400;
     overflow: hidden;
-    table {
-        width: 100%;
-        background: #f6f6f6;
-        td {
-            width: 28.33333333%;
-            background: #ffffff;
-            box-shadow: 0px 0px 14px rgba(0, 0, 0, 0.04);
-            border-radius: 8px;
-            vertical-align: top;
+    .box {
+        background: #ffffff;
+        padding: 20px;
+        box-sizing: border-box;
+        box-shadow: 0px 0px 14px rgba(0, 0, 0, 0.04);
+        border-radius: 8px;
+        min-height: 200px;
+        overflow: hidden;
 
-            &.con1 {
-                padding: 20px;
-                min-width: 350px;
-                ul.static {
-                    display: flex;
-                    flex-wrap: wrap;
-                    align-content: flex-center;
-                    align-items: center;
-                    justify-content: space-around;
-                    li {
-                        width: 23%;
-                        height: 94px;
-                        text-align: center;
-                        background: #0057bf;
-                        border-radius: 6px;
-                        color: #fff;
-                        b {
-                            font-size: 40px;
-                            font-family: Bahnschrift;
-                            font-weight: bold;
-                            line-height: 66px;
-                            display: block;
-                        }
-                        span {
-                            font-size: 12px;
-                            line-height: 16px;
-                        }
-                    }
-                }
-                p.line {
-                    color: #a5a5a5;
-                    height: 38px;
-                    line-height: 38px;
-                    text-align: center;
-                    font-size: 14px;
-                }
-                ul.personal {
-                    display: flex;
-                    flex-wrap: wrap;
-                    align-content: flex-center;
-                    align-items: center;
-                    justify-content: space-around;
-                    height: 92px;
-                    background: #f4f4f4;
-                    border: 1px solid #c9c9c9;
-                    border-radius: 6px;
-                    li {
-                        width: 23%;
-                        height: 94px;
-                        padding: 20px 0;
-                        box-sizing: border-box;
-                        text-align: center;
-                        border-radius: 6px;
-                        color: #fff;
-                        position: relative;
-                        span {
-                            font-size: 12px;
-                            line-height: 16px;
-                            color: #707070;
-                            margin-bottom: 10px;
-                            display: block;
-                            &::after {
-                                content: "";
-                                width: 1px;
-                                height: 14px;
-                                float: right;
-                                transform: rotate(45deg);
-                                display: block;
-                                background: #ccc;
-                            }
-                        }
-                        b {
-                            font-size: 26px;
-                            font-family: Bahnschrift;
-                            font-weight: 400;
-                            display: inline-block;
-                            color: #0057bf;
-                            text-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.12);
-                        }
-                        i {
-                            color: #666;
-                            margin-left: 8px;
-                            font-size: 18px;
-                            border: 1px dashed #999;
-                        }
-                        &:last-child {
-                            span {
-                                &::after {
-                                    display: none;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                .rc {
-                    margin-top: 50px;
-                    .rcEchart {
-                        width: 100%;
-                        height: calc(~"100vh - 500px");
-                    }
-                }
-            }
-
-            .tab1 {
-                position: absolute;
-                right: 0;
-                top: 20px;
+        &.con1 {
+            padding: 20px;
+            height: calc(~"100vh - 100px");
+            ul.static {
+                display: flex;
+                flex-wrap: wrap;
+                align-content: flex-center;
+                align-items: center;
+                justify-content: space-around;
                 li {
-                    float: left;
-                    width: 80px;
-                    height: 30px;
-                    line-height: 30px;
-                    background: #ffffff;
-                    border: 1px solid #bcbcbc;
+                    width: 23%;
+                    height: 94px;
                     text-align: center;
+                    background: #0057bf;
+                    border-radius: 6px;
+                    color: #fff;
                     cursor: pointer;
-                    color: #bcbcbc;
-                    margin-right: 20px;
-                    &.active {
-                        background: #0057bf;
-                        border: 1px solid #0057bf;
-                        color: #fff;
+                    b {
+                        font-size: 40px;
+                        font-family: Bahnschrift;
+                        font-weight: bold;
+                        line-height: 66px;
+                        display: block;
+                    }
+                    span {
+                        font-size: 12px;
+                        line-height: 16px;
+                    }
+                }
+            }
+            p.line {
+                color: #a5a5a5;
+                height: 38px;
+                line-height: 38px;
+                text-align: center;
+                font-size: 14px;
+            }
+            ul.personal {
+                display: flex;
+                flex-wrap: wrap;
+                align-content: flex-center;
+                align-items: center;
+                justify-content: space-around;
+                height: 92px;
+                background: #f4f4f4;
+                border: 1px solid #c9c9c9;
+                border-radius: 6px;
+                li {
+                    width: 23%;
+                    height: 94px;
+                    padding: 20px 0;
+                    box-sizing: border-box;
+                    text-align: center;
+                    border-radius: 6px;
+                    color: #fff;
+                    position: relative;
+                    span {
+                        font-size: 12px;
+                        line-height: 16px;
+                        color: #707070;
+                        margin-bottom: 10px;
+                        display: block;
+                        &::after {
+                            content: "";
+                            width: 1px;
+                            height: 14px;
+                            float: right;
+                            transform: rotate(45deg);
+                            display: block;
+                            background: #ccc;
+                        }
+                    }
+                    b {
+                        font-size: 26px;
+                        font-family: Bahnschrift;
+                        font-weight: 400;
+                        display: inline-block;
+                        color: #0057bf;
+                        text-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.12);
+                    }
+                    i {
+                        color: #666;
+                        margin-left: 8px;
+                        font-size: 18px;
+                        border: 1px dashed #999;
+                    }
+                    &:last-child {
+                        span {
+                            &::after {
+                                display: none;
+                            }
+                        }
                     }
                 }
             }
 
-            &.con2 {
-                padding: 20px;
-                min-width: 350px;
-                height: 40vh;
-                box-sizing: border-box;
-                position: relative;
-
-                .statis_box {
-                    margin-top: 15px;
-                    .checkEchart {
-                        width: 100%;
-                        height: 40vh;
-                    }
-                }
-            }
-
-            &.con3 {
-                position: relative;
-                padding: 20px;
-                box-sizing: border-box;
-                .ageEchart {
+            .rc {
+                margin-top: 50px;
+                .rcEchart {
                     width: 100%;
-                    height: 30vh;
-                }
-            }
-
-            &.con4 {
-                position: relative;
-                padding: 20px;
-                box-sizing: border-box;
-                .table {
-                    margin-top: 15px;
+                    height: 55vh;
                 }
             }
         }
+
+        .tab1 {
+            position: absolute;
+            right: 0;
+            top: 20px;
+            li {
+                float: left;
+                width: 80px;
+                height: 30px;
+                line-height: 30px;
+                background: #ffffff;
+                border: 1px solid #bcbcbc;
+                text-align: center;
+                cursor: pointer;
+                color: #bcbcbc;
+                margin-right: 20px;
+                border-radius: 5px;
+                &.active {
+                    background: #0057bf;
+                    border: 1px solid #0057bf;
+                    color: #fff;
+                }
+            }
+        }
+
+        &.con2 {
+            height: 46vh;
+            position: relative;
+            .statis_box {
+                margin-top: 15px;
+                .checkEchart {
+                    width: 100%;
+                    height: 39vh;
+                }
+            }
+        }
+
+        &.con3 {
+            position: relative;
+            height: calc(~"54vh - 120px");
+            .ageEchart {
+                width: 100%;
+                height: calc(~"54vh - 160px");
+            }
+        }
+
+        &.con4 {
+            position: relative;
+            height: calc(~"54vh - 120px");
+            .table {
+                margin-top: 15px;
+            }
+        }
     }
+
     .title {
         height: 20px;
         font-size: 16px;
@@ -712,13 +752,6 @@ export default {
             vertical-align: 4px;
             margin-right: 5px;
         }
-    }
-
-    .echartbox {
-        width: 100%;
-        height: 220px;
-        position: absolute;
-        bottom: 0;
     }
 }
 </style>

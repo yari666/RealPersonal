@@ -65,19 +65,23 @@
                 ></el-input>
             </el-form-item>
             <el-form-item label="出生年月">
-                <el-input
-                    :value="userInfo.birthday.substr(0, 10)"
+                <el-date-picker
+                    v-model="userInfo.birthday"
+                    type="date"
+                    placeholder="选择日期"
                     :readonly="readOnly"
-                    @keyup.enter.native="onSubmit('form')"
-                ></el-input>
+                >
+                </el-date-picker>
             </el-form-item>
 
             <el-form-item label="身份证有效起日期">
-                <el-input
+                <el-date-picker
                     v-model="userInfo.cardValidityDate"
+                    type="date"
+                    placeholder="选择日期"
                     :readonly="readOnly"
-                    @keyup.enter.native="onSubmit('form')"
-                ></el-input>
+                >
+                </el-date-picker>
             </el-form-item>
             <el-form-item label="身份证发证机关">
                 <el-input
@@ -87,11 +91,13 @@
                 ></el-input>
             </el-form-item>
             <el-form-item label="身份证有效止日期">
-                <el-input
+                <el-date-picker
                     v-model="userInfo.cardExpiryDate"
+                    type="date"
+                    placeholder="选择日期"
                     :readonly="readOnly"
-                    @keyup.enter.native="onSubmit('form')"
-                ></el-input>
+                >
+                </el-date-picker>
             </el-form-item>
 
             <el-form-item label="所属省">
@@ -189,9 +195,9 @@
                 >
                     <el-option
                         v-for="item in workTypeData"
-                        :key="item.id"
+                        :key="item.dicName"
                         :label="item.dicName"
-                        :value="item.id"
+                        :value="item.dicName"
                     ></el-option>
                 </el-select>
             </el-form-item>
@@ -341,7 +347,7 @@ export default {
                 city: "",
                 employeeName: "",
                 employeeType: 2, //管理，普通，访客
-                gender: -1,
+                gender: 1,
                 id: "",
                 idNumber: "",
                 licenseIssuingAuthority: "",
@@ -629,9 +635,9 @@ export default {
                 this.fileList = [fileList[fileList.length - 1]]; // 这一步，是 展示最后一次选择的csv文件
             }
 
-            const isLt2M = file.size / 1024 < 200;
+            const isLt2M = file.size / 1024 < 500;
             if (!isLt2M) {
-                this.$message.error("上传图片大小不能超过 200KB!");
+                this.$message.error("上传图片大小不能超过 500KB!");
             } else {
                 this.getBase64(file.raw).then((res) => {
                     _this.userInfo.currentPhoto64 = res.split(",")[1];

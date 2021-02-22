@@ -44,7 +44,8 @@
                             type="primary"
                             @keyup.enter.native="submitForm('ruleForm')"
                             @click="submitForm('ruleForm')"
-                            >登录</el-button
+                            :loading="loading"
+                            >登&nbsp;&nbsp;&nbsp;录</el-button
                         >
                     </el-form-item>
                 </el-form>
@@ -61,6 +62,7 @@ import { post } from "~/config/fetch.js";
 export default {
     data() {
         return {
+            loading: false,
             ruleForm: {
                 userName: "",
                 pass: "",
@@ -87,34 +89,46 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
+                    this.loading = true;
                     post("/api/realname/authenticate/authrization", {
                         userName: this.ruleForm.userName,
                         password: this.ruleForm.pass,
-                    }).then((res) => {
-                        if (res.isSuccess) {
-                            console.log(res);
-                            window.localStorage.setItem(
-                                "token",
-                                res.data.accessToken
-                            );
-                            window.localStorage.setItem(
-                                "userName",
-                                res.data.userName
-                            );
-                            window.localStorage.setItem(
-                                "userId",
-                                res.data.userId
-                            );
+                    })
+                        .then((res) => {
+                            if (res.isSuccess) {
+                                window.localStorage.setItem(
+                                    "token",
+                                    res.data.accessToken
+                                );
+                                window.localStorage.setItem(
+                                    "userName",
+                                    res.data.userName
+                                );
+                                window.localStorage.setItem(
+                                    "userId",
+                                    res.data.userId
+                                );
 
-                            this.$store.commit("setUserInfo", {
-                                token: res.data.accessToken,
-                                userId: res.data.userId,
-                                userName: res.data.userName,
-                            });
+                                window.localStorage.setItem(
+                                    "isAdd",
+                                    res.data.isAdd
+                                );
 
-                            this.$router.push({ path: "/home" });
-                        }
-                    });
+                                this.$store.commit("setUserInfo", {
+                                    token: res.data.accessToken,
+                                    userId: res.data.userId,
+                                    userName: res.data.userName,
+                                    isAdd: res.data.isAdd,
+                                });
+                                this.loading = false;
+
+                                this.$router.push({ path: "/home" });
+                            }
+                        })
+                        .catch((err) => {
+                            this.$message.error("登录失败");
+                            this.loading = false;
+                        });
                 } else {
                     console.log("error submit!!");
                     return false;
@@ -138,6 +152,7 @@ export default {
     overflow: hidden;
     .main {
         width: 58%;
+        min-width: 360px;
         height: 56vh;
         background: #eef2f5;
         border-radius: 10px;
@@ -204,7 +219,6 @@ export default {
                 box-shadow: 0px 7px 13px 0px rgba(0, 0, 0, 0.31);
                 border: none;
                 font-size: 18px;
-                letter-spacing: 20px;
             }
 
             .forget {

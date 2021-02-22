@@ -56,7 +56,7 @@
             <el-table-column prop="projectName" label="所属项目">
             </el-table-column>
 
-            <el-table-column prop="address" label="操作">
+            <el-table-column prop="address" label="操作" width="100">
                 <template slot-scope="scope">
                     <el-button
                         type="primary"
@@ -94,6 +94,7 @@
 <script>
 import add from "./add";
 import { get } from "~/config/fetch.js";
+import { exportData } from "~/utils/index";
 
 export default {
     data() {
@@ -170,29 +171,11 @@ export default {
 
         // 导出
         exportData() {
-            get(`/api/realname/company/export-companys`, {
-                KeyWord: this.KeyWord,
-                responseType: "blob",
-            }).then((res) => {
-                var content = res.data;
-                var blob = new Blob([content]);
-                var fileName = "企业管理.xlsx"; //要保存的文件名称
-                if ("download" in document.createElement("a")) {
-                    // 非IE下载
-                    var elink = document.createElement("a");
-                    elink.download = fileName;
-                    elink.style.display = "none";
-                    elink.href = URL.createObjectURL(blob);
-                    document.body.appendChild(elink);
-                    elink.click();
-                    URL.revokeObjectURL(elink.href); // 释放URL 对象
-                    document.body.removeChild(elink);
-                } else {
-                    // IE10+下载
-                    navigator.msSaveBlob(blob, fileName);
-                }
-                console.log(res);
-            });
+            exportData(
+                `/api/realname/company/export-companys`,
+                this.KeyWord,
+                "企业管理"
+            );
         },
     },
 };

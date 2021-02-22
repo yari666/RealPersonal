@@ -2,18 +2,20 @@
 <template>
     <el-container>
         <!---侧栏----->
-        <el-aside style="width: 224px">
-            <div class="logo"></div>
+        <el-aside :width="isCollapse ? '64px' : '200px'">
+            <div class="logo" :class="isCollapse ? 'cover' : ''"></div>
 
             <!-- 导航 -->
-
             <el-menu
                 :default-active="path"
-                background-color="transparent"
+                background-color="#031d4d"
                 text-color="#fff"
                 active-text-color="#ffd04b"
                 router
                 unique-opened
+                :collapse="isCollapse"
+                :collapse-transition="false"
+                class="el-menu-vertical-demo"
             >
                 <template v-for="item in menuList">
                     <el-submenu
@@ -141,7 +143,18 @@
 
         <el-container>
             <!---顶部----->
-            <el-header style="height: 68px">
+
+            <el-header>
+                <i
+                    class="el-icon-s-fold collapse"
+                    v-show="!isCollapse"
+                    @click="collapseEvent"
+                ></i>
+                <i
+                    class="el-icon-s-unfold collapse"
+                    @click="collapseEvent"
+                    v-show="isCollapse"
+                ></i>
                 <div class="fr">
                     <!-- <div class="weather fl">
                         <i class="el-icon-sunny"></i>晴 24℃
@@ -153,6 +166,9 @@
                         ></el-avatar>
                         {{ this.$store.state.userName }}
                     </div>
+
+                    <el-divider direction="vertical"></el-divider>
+                    <span> {{ nowDate }}</span>
 
                     <!-- <div class="email fl"><i class="icons"></i></div> -->
 
@@ -203,12 +219,15 @@
 <script>
 import revisePassword from "~/components/revisePassword";
 import { get } from "~/config/fetch.js";
+const timestamp = require("time-stamp");
 
 export default {
     data() {
         return {
             showRevisePassword: false,
             menuList: [],
+            isCollapse: false,
+            nowDate: "",
         };
     },
     components: { revisePassword },
@@ -229,6 +248,7 @@ export default {
         },
     },
     created() {
+        this.nowDate = timestamp("YYYY-MM-DD HH:mm:ss", new Date());
         this.getMenu();
     },
     methods: {
@@ -240,6 +260,10 @@ export default {
             if (command == "revisepass") {
                 this.showRevisePassword = !this.showRevisePassword;
             }
+        },
+
+        collapseEvent() {
+            this.isCollapse = !this.isCollapse;
         },
 
         // 修改密码
@@ -262,14 +286,36 @@ export default {
 </script>
 
 
-<style lang="less" scope>
+<style lang="less" >
 .el-container {
     height: 100vh;
     width: 100%;
 }
 
+.el-dialog__body {
+    word-break: inherit !important;
+}
+
 .icons {
     background: url(../assets/img/icons.png) no-repeat;
+}
+
+.el-menu {
+    border: none;
+}
+
+.el-aside {
+    cursor: pointer;
+    background: #031d4d;
+    .logo {
+        background: url(../assets/img/logo.svg) no-repeat;
+        background-size: contain;
+        height: 48px;
+        margin: 16px 10%;
+        &.cover {
+            background-size: cover;
+        }
+    }
 }
 
 .el-cascader .el-input__inner {
@@ -279,77 +325,33 @@ export default {
 
 .el-header {
     color: #535353;
-    line-height: 68px;
     text-align: right;
-    font-size: 14px;
+    font-size: 16px;
     background: #ffffff;
     box-shadow: 0px 3px 16px rgba(0, 0, 0, 0.08);
     z-index: 1;
-    .fl {
-        font-size: 16px;
+    line-height: 60px;
+    .collapse {
+        float: left;
+        margin-top: 20px;
+        font-size: 18px;
     }
-    .block {
-        margin-top: -10px;
-    }
-    .company,
-    .weather,
-    .user,
-    .email,
-    .ksh {
-        padding: 0 13px;
-        height: 18px;
-        line-height: 18px;
-        margin-top: 25px;
-        border-right: 1px solid #dfdfdf;
-        cursor: pointer;
-    }
-    .weather {
-        i {
-            font-size: 20px;
-            color: #ffa200;
-            vertical-align: -2px;
-            margin-right: 10px;
-        }
-    }
+
     .user {
+        font-size: 18px;
+        margin-top: 1px;
+        font-weight: 100;
         .el-avatar {
             margin-right: 10px;
-            margin-top: -3px;
+            margin-top: 17px;
             float: left;
-        }
-    }
-    .email {
-        i {
-            width: 16px;
-            height: 10px;
-            display: block;
-            margin-top: 4px;
-        }
-    }
-    .ksh {
-        i {
-            width: 21px;
-            height: 17px;
-            display: block;
-            background-position: -55px 0;
         }
     }
     .setting {
         font-size: 20px;
         padding-left: 13px;
+        margin-top: 20px;
     }
-}
-
-.el-menu {
-    border: none;
-}
-
-.el-container .logo {
-    background: url(../assets/img/logo.svg) no-repeat;
-    background-size: contain;
-    width: 170px;
-    height: 48px;
-    margin: 16px 25px;
 }
 
 .el-main {

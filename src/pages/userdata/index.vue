@@ -37,7 +37,7 @@
             </el-table-column>
             <el-table-column prop="currentAddress" label="现居住地址">
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="100">
                 <template slot-scope="scope">
                     <el-button
                         type="primary"
@@ -145,17 +145,6 @@ export default {
             this.pagination.SkipCount =
                 (newPage - 1) * this.pagination.MaxResultCount;
             this.getData();
-        },
-
-        // 导出
-        exportData() {
-            get(`/api/realname/project/export-projects`, {
-                FileName: "D:\\bya\\raaaaaa.xlsx",
-            }).then((res) => {
-                if (res.isSuccess) {
-                    console.log(res);
-                }
-            });
         },
     },
 };

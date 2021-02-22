@@ -9,7 +9,7 @@
                     ></el-input>
                 </el-form-item>
 
-                <el-form-item label="打卡时间">
+                <!-- <el-form-item label="打卡时间">
                     <el-time-picker
                         is-range
                         v-model="value4"
@@ -19,7 +19,7 @@
                         placeholder="选择时间范围"
                     >
                     </el-time-picker>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item>
                     <el-button type="primary" @click="getData">查询</el-button>
                 </el-form-item>
@@ -156,17 +156,6 @@ export default {
             this.pagination.SkipCount =
                 (newPage - 1) * this.pagination.MaxResultCount;
             this.getData();
-        },
-
-        // 导出
-        exportData() {
-            get(`/api/realname/project/export-projects`, {
-                FileName: "D:\\bya\\raaaaaa.xlsx",
-            }).then((res) => {
-                if (res.isSuccess) {
-                    console.log(res);
-                }
-            });
         },
     },
 };
