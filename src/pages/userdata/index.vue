@@ -141,7 +141,6 @@ export default {
         },
         // 监听 页码值
         handleCurrentChange(newPage) {
-            console.log(newPage);
             this.pagination.SkipCount =
                 (newPage - 1) * this.pagination.MaxResultCount;
             this.getData();

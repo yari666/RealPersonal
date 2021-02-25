@@ -31,7 +31,7 @@
             </el-table-column>
             <el-table-column prop="projectName" label="所属项目">
             </el-table-column>
-            <el-table-column label="进出标识">
+            <el-table-column label="进出标识" align="center">
                 <template slot-scope="scope">
                     <span>{{ scope.row.deviceStatus == 1 ? "进" : "出" }}</span>
                 </template>

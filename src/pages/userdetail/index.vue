@@ -74,7 +74,6 @@ export default {
             })
                 .then((_) => {
                     crossGet(`/api/ReadMsg`).then((res) => {
-                        console.log(res);
                         if (res.isSuccess) {
                             let data = res.data;
                             if (data.cardno) {

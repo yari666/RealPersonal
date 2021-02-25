@@ -24,9 +24,7 @@ export default {
     },
     components: { wtype, wcat },
     methods: {
-        handleClick(tab, event) {
-            console.log(tab, event);
-        },
+        handleClick(tab, event) {},
     },
 };
 </script>

@@ -25,14 +25,14 @@
             height="72vh"
             v-loading="loading"
         >
-            <el-table-column prop="sortNumb" label="菜单序号">
+            <el-table-column prop="sortNumb" label="菜单序号" align="center">
             </el-table-column>
             <el-table-column prop="menuCode" label="菜单编号">
             </el-table-column>
             <el-table-column prop="menuName" label="菜单名称">
             </el-table-column>
             <el-table-column prop="menuUrl" label="菜单URL"> </el-table-column>
-            <el-table-column label="是否激活">
+            <el-table-column label="是否激活" align="center">
                 <template slot-scope="scope">
                     {{ scope.row.isActive ? "是" : "否" }}
                 </template>

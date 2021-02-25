@@ -68,9 +68,17 @@
             <el-table-column prop="fingerPrint" label="项目指纹">
             </el-table-column>
 
-            <el-table-column prop="coveredArea" label="建筑面积（平方米）">
+            <el-table-column
+                prop="coveredArea"
+                align="center"
+                label="建筑面积（平方米）"
+            >
             </el-table-column>
-            <el-table-column prop="projectCost" label="工程造价（万元）">
+            <el-table-column
+                prop="projectCost"
+                align="center"
+                label="工程造价（万元）"
+            >
             </el-table-column>
             <el-table-column prop="constructionUnitName" label="建设单位">
             </el-table-column>
@@ -288,7 +296,6 @@ export default {
         },
         // 监听 页码值
         handleCurrentChange(newPage) {
-            console.log(newPage);
             this.pagination.SkipCount =
                 (newPage - 1) * this.pagination.MaxResultCount;
             this.getData();

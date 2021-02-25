@@ -89,7 +89,6 @@ export default {
 
         // 上传成功
         successUpload(response, file, fileList) {
-            console.log(response);
             if (response && response.id && response.fileName) {
                 this.$message.success({
                     message: "上传成功",

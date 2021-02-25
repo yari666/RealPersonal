@@ -50,8 +50,9 @@
             </el-table-column>
             <el-table-column prop="idNumber" label="证件号码">
             </el-table-column>
-            <el-table-column prop="national" label="民族"> </el-table-column>
-            <el-table-column label="性别">
+            <el-table-column prop="national" label="民族" align="center">
+            </el-table-column>
+            <el-table-column label="性别" align="center">
                 <template slot-scope="scope">
                     <span>{{
                         scope.row.gender == 1
@@ -68,7 +69,7 @@
 
             <el-table-column prop="phoneNumber" label="联系电话">
             </el-table-column>
-            <el-table-column prop="name" label="苏康码状态"
+            <el-table-column prop="name" label="苏康码状态" align="center"
                 >绿码
             </el-table-column>
             <el-table-column prop="projectName" label="所属项目">
@@ -315,7 +316,6 @@ export default {
         },
         // 监听 页码值
         handleCurrentChange(newPage) {
-            console.log(newPage);
             this.pagination.SkipCount =
                 (newPage - 1) * this.pagination.MaxResultCount;
             this.getData();

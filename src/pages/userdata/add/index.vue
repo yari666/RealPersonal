@@ -26,9 +26,7 @@ export default {
     },
     components: { baseBox, certificate, vitae },
     methods: {
-        handleClick(tab, event) {
-            console.log(tab, event);
-        },
+        handleClick(tab, event) {},
     },
 };
 </script>

@@ -31,7 +31,6 @@ export default {
     created() {},
     methods: {
         beforeAvatarUpload(file) {
-            console.log(file.size);
             const isLt2M = file.size / 1024 < 100;
 
             if (!isLt2M) {

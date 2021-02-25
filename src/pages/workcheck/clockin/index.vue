@@ -68,14 +68,14 @@
                     >
                 </template>
             </el-table-column>
-            <el-table-column label="现场照片">
+            <!-- <el-table-column label="现场照片">
                 <template slot-scope="scope">
                     <el-image
                         style="width: 90px; height: 120px"
                         :src="'data:img/jpg;base64,' + scope.row.scenePhoto"
                     ></el-image>
                 </template>
-            </el-table-column>
+            </el-table-column> -->
         </el-table>
 
         <div class="pagination">
@@ -152,7 +152,6 @@ export default {
         },
         // 监听 页码值
         handleCurrentChange(newPage) {
-            console.log(newPage);
             this.pagination.SkipCount =
                 (newPage - 1) * this.pagination.MaxResultCount;
             this.getData();

@@ -281,7 +281,6 @@ export default {
 
             if (e.id) {
                 this.sewageInfo = this.tableData.filter((_) => _.id == e.id)[0];
-                console.log(this.sewageInfo);
             }
         },
     },

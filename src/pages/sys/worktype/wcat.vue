@@ -28,7 +28,7 @@
             <el-table-column prop="dicCode" label="证书编号"> </el-table-column>
             <el-table-column prop="dicName" label="证书名称"> </el-table-column>
             <el-table-column prop="groupName" label="类型"> </el-table-column>
-            <el-table-column prop="dicName" label="是否激活">
+            <el-table-column prop="dicName" label="是否激活" align="center">
                 <template slot-scope="scope">
                     <span>{{ scope.row.isActive ? "是" : "否" }}</span>
                 </template>

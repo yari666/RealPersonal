@@ -41,7 +41,6 @@ export default {
     props: ["positionList"],
     created() {
         this.filterData = JSON.parse(JSON.stringify(this.positionList));
-        console.log(this.filterData);
 
         this.$nextTick(() => {
             this.mapInit();

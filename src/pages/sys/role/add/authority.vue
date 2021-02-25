@@ -142,7 +142,6 @@ export default {
                 projectids: this.checkedIndex,
             };
 
-            console.log(JSON.stringify(param));
             this.$emit("editData", param);
         },
         cancel() {

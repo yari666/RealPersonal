@@ -63,7 +63,6 @@ export default {
     watch: {
         currentItem: {
             handler(newName, oldName) {
-                console.log(newName);
                 this.form = {
                     isActive: newName.isActive,
                     remark: newName.remark,
@@ -96,7 +95,6 @@ export default {
                         });
                     } else {
                         // 编辑
-                        console.log(_this.currentItem.id);
                         put(
                             `/api/realname/role/${_this.currentItem.id}`,
                             _this.form

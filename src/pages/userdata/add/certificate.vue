@@ -33,12 +33,8 @@ export default {
         };
     },
     methods: {
-        handleRemove(file, fileList) {
-            console.log(file, fileList);
-        },
-        handlePreview(file) {
-            console.log(file);
-        },
+        handleRemove(file, fileList) {},
+        handlePreview(file) {},
     },
 };
 </script>

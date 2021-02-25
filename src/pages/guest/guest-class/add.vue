@@ -91,7 +91,6 @@ export default {
         // 获取所属企业
         getCompany() {
             get(`/api/realname/company/company-dictionary`).then((res) => {
-                console.log(res);
                 if (res.isSuccess) {
                     this.companyList = res.data;
                 }

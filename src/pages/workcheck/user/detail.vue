@@ -46,10 +46,10 @@
             <el-table-column
                 v-for="(item, index) in tableHead"
                 :key="index"
-                :label="item"
+                :label="item.date + '号'"
                 align="center"
             >
-                <el-table-column label="星期一" align="center">
+                <el-table-column :label="item.week" align="center">
                     <template slot-scope="scope">
                         <span class="empty" v-if="scope.row.data[index] == ''"
                             >-</span
@@ -116,7 +116,6 @@ export default {
     },
     created() {
         this.projectId = this.$route.params.projectId;
-        console.log(this.$route.query.SearchDate);
         if (this.$route.query.SearchDate) {
             this.SearchDate = this.$route.query.SearchDate;
         }

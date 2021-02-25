@@ -626,7 +626,7 @@ export default {
                 });
         },
         getImg(e) {
-            this.userInfo.currentPhoto64 = e.imgSrc;
+            this.userInfo.currentPhoto64 = e.imgSrc.split(",")[1];
         },
 
         getFile(file, fileList) {

@@ -1,26 +1,33 @@
 <template>
-    <div class="camera_outer">
-        <video
-            id="videoCamera"
-            :width="videoWidth"
-            :height="videoHeight"
-            autoplay
-        ></video>
-        <canvas
-            style="display: none"
-            id="canvasCamera"
-            :width="videoWidth"
-            :height="videoHeight"
-        ></canvas>
-        <div v-if="imgSrc" class="img_bg_camera">
-            <p>效果预览</p>
-            <img :src="imgSrc" alt class="tx_img" />
+    <div>
+        <div class="camera_outer">
+            <p>摄像头</p>
+            <video
+                id="videoCamera"
+                :width="videoWidth"
+                :height="videoHeight"
+                autoplay
+            ></video>
+            <canvas
+                style="display: none"
+                id="canvasCamera"
+                :width="videoWidth"
+                :height="videoHeight"
+            ></canvas>
+            <div v-if="imgSrc" class="img_bg_camera">
+                <p>效果预览</p>
+                <img :src="imgSrc" alt class="tx_img" />
+            </div>
         </div>
         <div class="button">
-            <el-button @click="getCompetence()">打开摄像头</el-button>
-            <el-button @click="stopNavigator()">关闭摄像头</el-button>
-            <el-button @click="setImage()">拍照</el-button>
-            <el-button @click="done()">完成</el-button>
+            <el-button type="primary" @click="getCompetence()"
+                >打开摄像头</el-button
+            >
+            <el-button type="primary" plain @click="stopNavigator()"
+                >关闭摄像头</el-button
+            >
+            <el-button type="primary" @click="setImage()">拍照</el-button>
+            <el-button type="primary" @click="done()">完成</el-button>
         </div>
     </div>
 </template>
@@ -28,6 +35,23 @@
 <style lang="less" scoped>
 .camera_outer {
     overflow: hidden;
+    p {
+        height: 20px;
+        line-height: 20px;
+        font-size: 16px;
+    }
+    #videoCamera {
+        float: left;
+    }
+    .img_bg_camera {
+        float: right;
+        p {
+            margin-top: -20px;
+        }
+    }
+}
+.button {
+    margin-top: 20px;
 }
 </style>
 

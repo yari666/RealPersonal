@@ -124,7 +124,7 @@ export default {
             ];
             const filetype = file.name.replace(/.+\./, "");
             const isRightSize = (file.size || 0) / 1024 < uploadLimit;
-            console.log(uploadLimit);
+
             if (!isRightSize) {
                 this.$message.error("文件大小超过了 " + uploadLimit + "KB");
                 return false;
