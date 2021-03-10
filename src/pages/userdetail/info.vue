@@ -38,17 +38,10 @@
                 ></el-input>
             </el-form-item>
             <el-form-item label="性别">
-                <el-input
-                    :value="
-                        userInfo.gender == 0
-                            ? '女'
-                            : userInfo.gender == 1
-                            ? '男'
-                            : ''
-                    "
-                    :readonly="readOnly"
-                    @keyup.enter.native="onSubmit('form')"
-                ></el-input>
+                <el-radio-group v-model="userInfo.gender" :readonly="readOnly">
+                    <el-radio :label="1">男</el-radio>
+                    <el-radio :label="0">女</el-radio>
+                </el-radio-group>
             </el-form-item>
             <el-form-item label="身份证号" prop="idNumber">
                 <el-input
@@ -130,15 +123,11 @@
             </el-form-item>
 
             <el-form-item label="苏安码状态">
-                <el-select
-                    v-model="value"
-                    placeholder="请选择"
-                    :disabled="readOnly"
-                >
-                    <el-option label="绿码" value="0"> </el-option>
-                    <el-option label="黄码" value="1"> </el-option>
-                    <el-option label="红码" value="2"> </el-option>
-                </el-select>
+                <el-radio-group v-model="value" :readonly="readOnly">
+                    <el-radio :label="0">绿码</el-radio>
+                    <el-radio :label="1">黄码</el-radio>
+                    <el-radio :label="2">红码</el-radio>
+                </el-radio-group>
             </el-form-item>
 
             <el-form-item label="项目名称" prop="projectId">
@@ -213,15 +202,14 @@
             </el-form-item>
 
             <el-form-item label="人员类型">
-                <el-select
-                    :value="userInfo.employeeType + ''"
-                    placeholder="请选择"
-                    :disabled="readOnly"
+                <el-radio-group
+                    v-model="userInfo.employeeType"
+                    :readonly="readOnly"
                 >
-                    <el-option label="管理人员" value="0" disabled> </el-option>
-                    <el-option label="普通人员" value="1" disabled> </el-option>
-                    <el-option label="访客" value="2"> </el-option>
-                </el-select>
+                    <el-radio :label="2">访客</el-radio>
+                    <el-radio :label="0" disabled>管理人员</el-radio>
+                    <el-radio :label="1" disabled>普通人员</el-radio>
+                </el-radio-group>
             </el-form-item>
 
             <el-form-item label="身份证照片">
@@ -236,7 +224,7 @@
                 ></el-image>
             </el-form-item>
 
-            <el-form-item label="现场照片">
+            <el-form-item label="人脸照片">
                 <el-image
                     style="width: 120px; height: 160px"
                     class="fl"
@@ -261,7 +249,7 @@
                         :on-error="onError"
                         :auto-upload="false"
                         ><el-button type="primary" size="small" slot="trigger"
-                            >手动上传</el-button
+                            >本地上传</el-button
                         >
                     </el-upload>
 
@@ -327,7 +315,7 @@ export default {
             }, 0);
         };
         return {
-            value: "0",
+            value: 0,
             readOnly: true, //只读
             showCarm: false,
             showUpload: false,
@@ -635,9 +623,9 @@ export default {
                 this.fileList = [fileList[fileList.length - 1]]; // 这一步，是 展示最后一次选择的csv文件
             }
 
-            const isLt2M = file.size / 1024 < 500;
+            const isLt2M = file.size / 1024 < 200;
             if (!isLt2M) {
-                this.$message.error("上传图片大小不能超过 500KB!");
+                this.$message.error("上传图片大小不能超过 200KB!");
             } else {
                 this.getBase64(file.raw).then((res) => {
                     _this.userInfo.currentPhoto64 = res.split(",")[1];

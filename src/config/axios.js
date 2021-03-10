@@ -37,34 +37,50 @@ service.interceptors.response.use(
     },
     error => {
         if (error.response) {
-            switch (error.response.status) {
-                case 401: {
-                    window.localStorage.setItem('token', '');
+            if (error.response.config.params && error.response.config.params.noMessage) {
+                switch (error.response.status) {
+                    case 401: {
+                        window.localStorage.setItem('token', '');
 
-                    router.replace({
-                        path: '/login',
-                        // 登录成功后跳入浏览的当前页面
-                        query: { redirect: router.currentRoute.fullPath }
-                    })
-                    break
+                        router.replace({
+                            path: '/login',
+                            // 登录成功后跳入浏览的当前页面
+                            query: { redirect: router.currentRoute.fullPath }
+                        })
+                        break
+                    }
                 }
-                case 403: {
-                    Message({
-                        message: error.response.data.error.message || 'Error',
-                        type: 'error',
-                        duration: 5 * 1000
-                    })
-                    break
-                }
-                case 500: {
+            } else {
+                switch (error.response.status) {
+                    case 401: {
+                        window.localStorage.setItem('token', '');
 
-                    Message({
-                        message: error.response.data.error.message || 'Error',
-                        type: 'error',
-                        duration: 5 * 1000
-                    })
+                        router.replace({
+                            path: '/login',
+                            // 登录成功后跳入浏览的当前页面
+                            query: { redirect: router.currentRoute.fullPath }
+                        })
+                        break
+                    }
+                    case 403: {
+                        Message({
+                            message: error.response.data.error.message || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                        break
+                    }
+                    case 500: {
+
+                        Message({
+                            message: error.response.data.error.message || 'Error',
+                            type: 'error',
+                            duration: 5 * 1000
+                        })
+                    }
                 }
             }
+
         }
         return Promise.reject(error)
     }

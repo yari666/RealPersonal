@@ -26,7 +26,7 @@
                 ></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="设备来源" prop="deviceSource">
+        <!-- <el-form-item label="设备来源" prop="deviceSource">
             <el-select
                 placeholder="请选择设备来源"
                 v-model="form.deviceSource"
@@ -39,7 +39,7 @@
                     :value="item.key"
                 ></el-option>
             </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="所属项目">
             <el-select
                 placeholder="请选择所属项目"
@@ -76,7 +76,7 @@ export default {
                 deviceName: "",
                 deviceMacAddress: "",
                 deviceStatus: -1,
-                deviceSource: -1,
+                // deviceSource: -1,
                 projectId: "",
             },
             outInData: [],
@@ -104,26 +104,26 @@ export default {
                         trigger: "blur",
                     },
                 ],
-                deviceSource: [
-                    {
-                        required: true,
-                        message: "请选择设备来源",
-                        trigger: "blur",
-                    },
-                ],
+                // deviceSource: [
+                //     {
+                //         required: true,
+                //         message: "请选择设备来源",
+                //         trigger: "blur",
+                //     },
+                // ],
             },
         };
     },
     props: ["openType", "currentItem"],
     created() {
         this.getOutIn();
-        this.getResource();
+        // this.getResource();
         this.getProject();
         this.form = {
             deviceName: this.currentItem.deviceName,
             deviceMacAddress: this.currentItem.deviceMacAddress,
             deviceStatus: this.currentItem.deviceStatus,
-            deviceSource: this.currentItem.deviceSource,
+            // deviceSource: this.currentItem.deviceSource,
             projectId: this.currentItem.projectId,
         };
     },
@@ -132,30 +132,32 @@ export default {
             let _this = this;
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    // 新增
-                    post(`/api/realname/device`, _this.form).then((res) => {
-                        if (res.isSuccess) {
-                            this.$message({
-                                message: "新增成功！",
-                                type: "success",
-                            });
-                            this.$emit("ok");
-                        }
-                    });
-                } else if (this.openType == "edit") {
-                    // 修改
-                    put(
-                        `/api/realname/device/${_this.currentItem.id}`,
-                        this.form
-                    ).then((res) => {
-                        if (res.isSuccess) {
-                            this.$message({
-                                message: "修改成功！",
-                                type: "success",
-                            });
-                            this.$emit("ok");
-                        }
-                    });
+                    if (this.openType == "add") {
+                        // 新增
+                        post(`/api/realname/device`, _this.form).then((res) => {
+                            if (res.isSuccess) {
+                                this.$message({
+                                    message: "新增成功！",
+                                    type: "success",
+                                });
+                                this.$emit("ok");
+                            }
+                        });
+                    } else if (this.openType == "edit") {
+                        // 修改
+                        put(
+                            `/api/realname/device/${_this.currentItem.id}`,
+                            this.form
+                        ).then((res) => {
+                            if (res.isSuccess) {
+                                this.$message({
+                                    message: "修改成功！",
+                                    type: "success",
+                                });
+                                this.$emit("ok");
+                            }
+                        });
+                    }
                 } else {
                     console.log("error submit!!");
                     return false;
@@ -182,7 +184,9 @@ export default {
 
         // 项目下拉
         getProject() {
-            get(`/api/realname/project/project-dictionary`).then((res) => {
+            get(`/api/realname/project/project-dictionary`, {
+                noMessage: true, //不需要报错弹框
+            }).then((res) => {
                 if (res.isSuccess) {
                     this.projectData = res.data;
                 }

@@ -74,7 +74,7 @@
             </el-table-column>
             <el-table-column prop="projectName" label="所属项目">
             </el-table-column>
-            <el-table-column label="操作" width="320px">
+            <el-table-column label="操作" width="420px">
                 <template slot-scope="scope">
                     <el-button
                         type="primary"
@@ -96,6 +96,14 @@
                         @click="deviceBind(scope.row)"
                         v-if="scope.row.FRect"
                         >联接设备</el-button
+                    >
+
+                    <el-button
+                        v-if="!scope.row.fRect"
+                        type="warning"
+                        size="small"
+                        @click="create(scope.row)"
+                        >获取特征码</el-button
                     >
 
                     <el-button
@@ -165,6 +173,9 @@ export default {
             },
             areaData: [],
             area: "",
+            form: {
+                val: "",
+            },
             currentItem: {
                 address: "",
                 birthday: "",
@@ -209,9 +220,26 @@ export default {
                 }
             });
         },
+        openFeature(item) {
+            this.currentItem = item;
+        },
+        create(item) {
+            get(`/api/realname/employee/employees-face-detect`, {
+                projectId: item.projectId,
+                employeeId: item.id,
+            }).then((res) => {
+                this.$message({
+                    message: res.data.msg,
+                    type: res.data.resultStatus ? "success" : "error",
+                });
+
+                this.getData();
+            });
+        },
         addClass() {
             this.openType = "add";
             this.showAdd = true;
+            this.currentId = "";
         },
         editClass(id) {
             this.openType = "edit";

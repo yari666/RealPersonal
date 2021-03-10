@@ -51,6 +51,7 @@
                         @click="editClass(scope.row)"
                         >编辑</el-button
                     >
+
                     <el-button
                         type="warning"
                         size="small"
@@ -81,7 +82,7 @@
         <!-- 弹框内容 -->
         <el-dialog
             :close-on-click-modal="false"
-            title="新增设备"
+            :title="openType == 'add' ? '新增设备' : '编辑设备'"
             :visible.sync="showAdd"
             @closed="closeCancel"
         >
@@ -135,7 +136,7 @@ export default {
                 deviceName: "",
                 deviceSerialNumber: "",
                 deviceStatus: -1,
-                deviceSource: -1,
+                // deviceSource: -1,
                 projectId: "",
                 deviceMacAddress: "",
             },
@@ -148,6 +149,13 @@ export default {
     methods: {
         addClass() {
             this.openType = "add";
+            this.currentItem = {
+                deviceName: "",
+                deviceStatus: -1,
+                // deviceSource: -1,
+                projectId: "",
+                deviceMacAddress: "",
+            };
             this.showAdd = true;
         },
         editClass(item) {
@@ -155,6 +163,7 @@ export default {
             this.showAdd = true;
             this.currentItem = item;
         },
+
         openSet(item) {
             this.currentItem = item;
             this.showSet = true;
