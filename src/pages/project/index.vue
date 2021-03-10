@@ -28,10 +28,7 @@
             </el-form>
 
             <div class="fr">
-                <el-button
-                    type="primary"
-                    @click="addClass"
-                    v-if="isAdd == 'true'"
+                <el-button type="primary" @click="addClass" v-if="isAdd"
                     >添加</el-button
                 >
                 <el-button type="primary" @click="getData">同步</el-button>
@@ -89,7 +86,7 @@
                     <span>{{ scope.row.constructionUnitContactPhone }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="280">
+            <el-table-column label="操作" width="340">
                 <template slot-scope="scope">
                     <el-button
                         type="primary"
@@ -97,6 +94,13 @@
                         @click="look(scope.row)"
                         plain
                         >查看</el-button
+                    >
+
+                    <el-button
+                        type="primary"
+                        size="small"
+                        @click="edit(scope.row)"
+                        >编辑</el-button
                     >
 
                     <el-button
@@ -137,6 +141,7 @@
                 :currentId="currentId"
                 :currentItem="currentItem"
                 :readOnly="readOnly"
+                :openType="openType"
                 @cancel="closeCancel"
                 @ok="closeOk"
             ></add>
@@ -183,6 +188,7 @@ export default {
             areaData: [],
             area: "",
             readOnly: false,
+            openType: "add",
             currentItem: {
                 id: "",
                 projectCode: "",
@@ -220,6 +226,29 @@ export default {
             });
         },
         addClass() {
+            this.openType = "add";
+            this.readOnly = false;
+            this.currentItem = {
+                id: "",
+                projectCode: "",
+                projectName: "",
+                contractRecordNumber: "",
+                city: "",
+                township: "",
+                villagesAndTowns: "",
+                address: "",
+                coveredArea: 0,
+                projectCost: 0,
+                constructionUnitName: "",
+                constructionUnitSocialCreditCode: "",
+                constructionUnitContact: "",
+                constructionUnitContactPhone: "",
+            };
+            this.showAdd = true;
+        },
+        edit(item) {
+            this.openType = "edit";
+            this.currentItem = item;
             this.readOnly = false;
             this.showAdd = true;
         },

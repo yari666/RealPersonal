@@ -12,8 +12,21 @@
                 :readonly="readOnly"
             ></el-input>
         </el-form-item>
-        <el-form-item label="项目所在区县">
-            <el-input v-model="area" :readonly="readOnly"></el-input>
+        <el-form-item label="项目所在区/县">
+            <el-input
+                v-model="form.city"
+                :readonly="readOnly"
+                placeholder="市"
+                style="width: 30%; float: left"
+            ></el-input
+            >&nbsp;&nbsp;市&nbsp;&nbsp;
+            <el-input
+                v-model="form.township"
+                :readonly="readOnly"
+                placeholder="区/县"
+                style="width: 30%"
+            ></el-input
+            >&nbsp;&nbsp;区/县
         </el-form-item>
         <el-form-item label="项目属地">
             <el-input
@@ -73,7 +86,7 @@
 </template>
 
 <script>
-import { get, post } from "~/config/fetch.js";
+import { get, post, put } from "~/config/fetch.js";
 
 export default {
     data() {
@@ -113,7 +126,7 @@ export default {
             return address;
         },
     },
-    props: ["currentItem", "readOnly"],
+    props: ["currentItem", "readOnly", "openType"],
     created() {
         this.getData();
     },
@@ -136,18 +149,34 @@ export default {
 
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    // 新增
-                    post(`/api/realname/project/project`, {
-                        projectName: _this.form.projectName,
-                    }).then((res) => {
-                        if (res.isSuccess) {
-                            this.$message({
-                                message: "新增成功！",
-                                type: "success",
-                            });
-                            this.$emit("ok");
-                        }
-                    });
+                    if (this.openType == "add") {
+                        // 新增
+                        post(`/api/realname/project/project`, {
+                            projectName: _this.form.projectName,
+                        }).then((res) => {
+                            if (res.isSuccess) {
+                                this.$message({
+                                    message: "新增成功！",
+                                    type: "success",
+                                });
+                                this.$emit("ok");
+                            }
+                        });
+                    } else {
+                        // 编辑
+                        put(
+                            `/api/realname/project/${this.currentItem.id}`,
+                            this.form
+                        ).then((res) => {
+                            if (res.isSuccess) {
+                                this.$message({
+                                    message: "修改成功！",
+                                    type: "success",
+                                });
+                                this.$emit("ok");
+                            }
+                        });
+                    }
                 } else {
                     console.log("error submit!!");
                     return false;

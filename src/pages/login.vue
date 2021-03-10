@@ -122,7 +122,12 @@ export default {
                                 });
                                 this.loading = false;
 
-                                this.$router.push({ path: "/home" });
+                                let hostName = this.$route.query.redirect;
+                                if (hostName) {
+                                    this.$router.push(hostName); // 登录成功后，返回上次进入的页面；
+                                } else {
+                                    this.$router.push("/home");
+                                }
                             }
                         })
                         .catch((err) => {

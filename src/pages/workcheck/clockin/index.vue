@@ -53,7 +53,7 @@
             <el-table-column prop="teamName" label="所属班组">
             </el-table-column>
 
-            <el-table-column label="进出标识" width="80px">
+            <el-table-column label="进出标识" width="80px" align="center">
                 <template slot-scope="scope">
                     <span>{{
                         scope.row.inOutStatus == 1 ? "进场" : "出场"
@@ -68,14 +68,16 @@
                     >
                 </template>
             </el-table-column>
-            <!-- <el-table-column label="现场照片">
+            <el-table-column label="现场照片" align="center">
                 <template slot-scope="scope">
                     <el-image
+                        v-if="scope.row.photoUrl"
                         style="width: 90px; height: 120px"
-                        :src="'data:img/jpg;base64,' + scope.row.scenePhoto"
+                        :src="scope.row.photoUrl"
                     ></el-image>
+                    <span v-else>无</span>
                 </template>
-            </el-table-column> -->
+            </el-table-column>
         </el-table>
 
         <div class="pagination">
