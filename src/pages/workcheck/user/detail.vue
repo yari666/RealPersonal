@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <el-table :data="tableData">
+        <el-table :data="tableData" v-loading="loading">
             <el-table-column
                 prop="employeeName"
                 label="姓名"
@@ -43,36 +43,53 @@
                 fixed="left"
             >
             </el-table-column>
-            <el-table-column
-                v-for="(item, index) in tableHead"
-                :key="index"
-                :label="item.date + '号'"
-                align="center"
-            >
-                <el-table-column :label="item.week" align="center">
-                    <template slot-scope="scope">
-                        <span class="empty" v-if="scope.row.data[index] == ''"
-                            >-</span
-                        >
-                        <span v-else-if="scope.row.data[index] == 0">⚪</span>
-                        <span v-else>{{ scope.row.data[index] }}</span>
-                    </template>
+
+            <template v-for="(item, index) in tableHead">
+                <el-table-column
+                    :key="index"
+                    v-if="item.date != 'HourMinute' && item.date != 'Days'"
+                    :label="item.date + '号'"
+                    align="center"
+                >
+                    <el-table-column :label="item.week" align="center">
+                        <template slot-scope="scope">
+                            <span
+                                class="empty"
+                                v-if="scope.row.data[index] == ''"
+                                >-</span
+                            >
+                            <span v-else-if="scope.row.data[index] == 0"
+                                >⚪</span
+                            >
+                            <span v-else>{{ scope.row.data[index] }}</span>
+                        </template>
+                    </el-table-column>
                 </el-table-column>
-            </el-table-column>
-            <el-table-column
-                label="时长总计(小时)"
-                align="center"
-                fixed="right"
-            >
-                <template slot-scope="scope">{{
-                    getSum(scope.row.data)
-                }}</template>
-            </el-table-column>
-            <el-table-column label="天数总计(天)" align="center" fixed="right">
-                <template slot-scope="scope">{{
-                    getDay(scope.row.data)
-                }}</template>
-            </el-table-column>
+
+                <el-table-column
+                    :key="index"
+                    v-else-if="item.date == 'HourMinute'"
+                    label="时长总计(小时)"
+                    align="center"
+                    fixed="right"
+                >
+                    <template slot-scope="scope">{{
+                        scope.row.data[index]
+                    }}</template>
+                </el-table-column>
+
+                <el-table-column
+                    :key="index"
+                    v-else-if="item.date == 'Days'"
+                    label="天数总计(天)"
+                    align="center"
+                    fixed="right"
+                >
+                    <template slot-scope="scope">{{
+                        scope.row.data[index]
+                    }}</template>
+                </el-table-column>
+            </template>
         </el-table>
 
         <div class="pagination">
