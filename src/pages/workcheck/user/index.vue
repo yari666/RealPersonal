@@ -8,21 +8,6 @@
                         v-model="KeyWord"
                     ></el-input>
                 </el-form-item>
-                <!-- 
-                <el-form-item label="所属项目">
-                    <el-select
-                        placeholder="请选择所属项目"
-                        v-model="projectId"
-                        style="width: 100%"
-                    >
-                        <el-option
-                            v-for="item in projectData"
-                            :key="item.id"
-                            :label="item.projectName"
-                            :value="item.id"
-                        ></el-option>
-                    </el-select>
-                </el-form-item> -->
 
                 <el-form-item label="考勤年月">
                     <el-date-picker
