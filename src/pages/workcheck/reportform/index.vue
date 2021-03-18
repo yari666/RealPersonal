@@ -23,10 +23,6 @@
                     <el-button type="primary" @click="getData">查询</el-button>
                 </el-form-item>
             </el-form>
-
-            <div class="fr">
-                <el-button type="primary">导出</el-button>
-            </div>
         </div>
 
         <el-table

@@ -49,95 +49,6 @@
                         <span slot="title">{{ item.menuName }}</span>
                     </el-menu-item>
                 </template>
-
-                <!-- <el-menu-item index="/home">
-                    <i class="el-icon-house"></i>
-                    <span slot="title">首页</span>
-                </el-menu-item>
-
-                <el-menu-item index="/project">
-                    <i class="el-icon-set-up"></i>
-                    <span slot="title">项目管理</span>
-                </el-menu-item>
-
-                <el-menu-item index="/company">
-                    <i class="el-icon-office-building"></i>
-                    <span slot="title">企业管理</span>
-                </el-menu-item>
-
-                <el-submenu index="/user">
-                    <template slot="title">
-                        <i class="el-icon-user"></i>
-                        <span>人员管理</span>
-                    </template>
-                    <el-menu-item index="/user/manager">管理人员</el-menu-item>
-                    <el-menu-item index="/user/worker">普通人员</el-menu-item>
-                </el-submenu>
-
-                <el-submenu index="/guest">
-                    <template slot="title">
-                        <i class="el-icon-phone-outline"></i>
-                        <span>访客管理</span>
-                    </template>
-
-                    <el-menu-item index="/guest/guestuser"
-                        >访客列表</el-menu-item
-                    >
-                    <el-menu-item index="/guest/guestclass"
-                        >班组管理</el-menu-item
-                    >
-                </el-submenu>
-
-                <el-submenu index="/workcheck">
-                    <template slot="title">
-                        <i class="el-icon-bell"></i>
-                        <span>考勤管理</span>
-                    </template>
-
-                    <el-menu-item index="/workcheck/clockin"
-                        >打卡记录</el-menu-item
-                    >
-                    <el-menu-item index="/workcheck/user"
-                        >人员考勤</el-menu-item
-                    >
-                    <el-menu-item index="/workcheck/reportform"
-                        >考勤日报表</el-menu-item
-                    >
-                </el-submenu>
-
-                <el-menu-item index="/device">
-                    <i class="el-icon-video-camera"></i>
-                    <span slot="title">设备管理</span>
-                </el-menu-item>
-
-                <el-menu-item index="/api">
-                    <i class="el-icon-paperclip"></i>
-                    <span slot="title">API管理</span>
-                </el-menu-item>
-
-                <el-menu-item index="/userdata">
-                    <i class="el-icon-user"></i>
-                    <span slot="title">人员库</span>
-                </el-menu-item>
-
-                <el-menu-item index="/operation">
-                    <i class="el-icon-setting"></i>
-                    <span slot="title">操作日志</span>
-                </el-menu-item>
-
-                <el-submenu index="11">
-                    <template slot="title">
-                        <i class="el-icon-user"></i>
-                        <span>账户管理</span>
-                    </template>
-
-                    <el-menu-item index="/sys/account">账号管理</el-menu-item>
-                    <el-menu-item index="/sys/role">角色管理</el-menu-item>
-                    <el-menu-item index="/sys/menu">菜单管理</el-menu-item>
-                    <el-menu-item index="/sys/worktype"
-                        >工种/证书字典</el-menu-item
-                    >
-                </el-submenu> -->
             </el-menu>
         </el-aside>
 
@@ -178,9 +89,9 @@
                             <i class="el-icon-setting setting"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                            <!-- <el-dropdown-item command="revisepass"
+                            <el-dropdown-item command="revisepass"
                                 >修改密码</el-dropdown-item
-                            > -->
+                            >
                             <el-dropdown-item command="exit"
                                 >退出登录</el-dropdown-item
                             >

@@ -11,6 +11,7 @@
                 type="password"
                 v-model="revisePasswordForm.oldpass"
                 auto-complete="off"
+                @keyup.enter.native="submitForm('revisePasswordForm')"
             ></el-input>
         </el-form-item>
 
@@ -19,6 +20,7 @@
                 type="password"
                 v-model="revisePasswordForm.pass"
                 auto-complete="off"
+                @keyup.enter.native="submitForm('revisePasswordForm')"
             ></el-input>
         </el-form-item>
 
@@ -27,11 +29,15 @@
                 type="password"
                 v-model="revisePasswordForm.checkPass"
                 auto-complete="off"
+                @keyup.enter.native="submitForm('revisePasswordForm')"
             ></el-input>
         </el-form-item>
 
         <el-form-item>
-            <el-button type="primary" @click="submitForm('revisePasswordForm')"
+            <el-button
+                type="primary"
+                @click="submitForm('revisePasswordForm')"
+                @keyup.enter.native="submitForm('revisePasswordForm')"
                 >确定</el-button
             >
             <el-button @click="cancel('revisePasswordForm')">取消</el-button>
@@ -40,6 +46,8 @@
 </template>
 
 <script>
+import { put } from "~/config/fetch.js";
+
 export default {
     data() {
         var validatePass = (rule, value, callback) => {
@@ -77,7 +85,7 @@ export default {
     props: ["showRevisePassword"],
     computed: {
         userId() {
-            return this.$store.state.userInfo.userId;
+            return this.$store.state.userId;
         },
     },
     methods: {
@@ -87,13 +95,12 @@ export default {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     // 调取修改密码接口
-                    UserPwd({
+                    put(`/api/realname/user/user-pwd`, {
                         id: _this.userId,
                         oldPwd: _this.revisePasswordForm.oldpass,
                         newPwd: _this.revisePasswordForm.pass,
                     }).then((res) => {
-                        res = res.data;
-                        if (res && res.resultCode) {
+                        if (res && res.data) {
                             this.$message({
                                 message: "修改成功",
                                 type: "success",

@@ -21,7 +21,6 @@
                 <el-button type="primary" @click="addClass('add')"
                     >添加</el-button
                 >
-                <el-button type="primary">导出</el-button>
             </div>
         </div>
 

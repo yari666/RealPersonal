@@ -5,7 +5,19 @@
         </el-form-item>
 
         <el-form-item label="所属项目">
-            <el-input v-model="company" style="width: 80%"></el-input>
+            <!-- <el-input v-model="company" style="width: 80%"></el-input> -->
+            <el-select
+                placeholder="请选择所属项目"
+                v-model="company"
+                style="width: 80%"
+            >
+                <el-option
+                    v-for="item in projectData"
+                    :key="item.id"
+                    :label="item.projectName"
+                    :value="item.id"
+                ></el-option>
+            </el-select>
         </el-form-item>
 
         <el-form-item label="控制模式">
@@ -131,6 +143,8 @@ import { get, post } from "~/config/fetch.js";
 export default {
     data() {
         return {
+            projectData: [],
+
             company: "",
             name: "",
             control_mode: "relay",
@@ -150,13 +164,11 @@ export default {
                 70: "70（默认）",
                 100: "100",
             },
-
             thresholdMarks: {
                 0: "0",
                 80: "80（默认）",
                 100: "100",
             },
-
             rules: {
                 deviceName: [
                     {
@@ -191,13 +203,34 @@ export default {
     },
     props: ["currentItem"],
     created() {
-        this.getOutIn();
-        this.getResource();
         this.getProject();
-        this.name = this.currentItem.deviceName;
-        this.company = this.currentItem.projectName;
+        this.getDeviceSetting();
     },
     methods: {
+        getDeviceSetting() {
+            get(
+                `/api/realname/device/device-config-info/${this.currentItem.id}`
+            ).then((res) => {
+                if (res && res.data) {
+                    let data = res.data;
+
+                    this.company = data.company;
+                    this.name = data.name;
+                    this.control_mode = data.controlMode;
+                    this.facemask_model = data.facemaskModel;
+                    this.recognition_distance = data.recognitionDistanc;
+                    this.similarity_threshold = data.similarityThreshold;
+                    this.temperature_mode = data.temperatureMode;
+                    this.temperature_compensation =
+                        data.temperatureCompensation;
+                    this.temperature_threshold = data.temperatureThreshold;
+                    this.voice_broadcast = data.voiceBroadcast;
+                    this.fill_light = data.fillLight;
+                    this.volume = data.volume;
+                    this.feature_mode = data.featureMode;
+                }
+            });
+        },
         onSubmit() {
             let param = {
                 company: this.company,
@@ -225,23 +258,6 @@ export default {
                         type: "success",
                     });
                     this.$emit("ok");
-                }
-            });
-        },
-        // 进出标识下拉
-        getOutIn() {
-            get(`/api/realname/device/in-out-status`).then((res) => {
-                if (res.isSuccess) {
-                    this.outInData = res.data;
-                }
-            });
-        },
-
-        // 设备来源下拉
-        getResource() {
-            get(`/api/realname/device/device-source`).then((res) => {
-                if (res.isSuccess) {
-                    this.resourceData = res.data;
                 }
             });
         },

@@ -15,7 +15,6 @@
 
             <div class="fr">
                 <el-button type="primary" @click="getData">同步</el-button>
-                <!-- <el-button type="primary">导出</el-button> -->
             </div>
         </div>
 

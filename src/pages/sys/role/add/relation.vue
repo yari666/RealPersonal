@@ -2,7 +2,7 @@
     <div>
         <el-transfer
             v-model="checkedIndex"
-            :titles="['待选项', '已选项']"
+            :titles="['待关联项目', '已关联项目']"
             :props="{
                 key: 'id',
                 label: 'projectName',
