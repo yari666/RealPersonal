@@ -45,9 +45,9 @@
         <el-form-item label="识别距离（米）">
             <el-radio-group v-model="recognition_distance">
                 <el-radio label="0.5">0.5米以内</el-radio>
-                <el-radio label="1">1米以内</el-radio>
+                <el-radio label="1.0">1米以内</el-radio>
                 <el-radio label="1.5">1.5米以内（默认）</el-radio>
-                <el-radio label="2">2米以内</el-radio>
+                <el-radio label="2.0">2米以内</el-radio>
             </el-radio-group>
         </el-form-item>
 
@@ -218,7 +218,7 @@ export default {
                     this.name = data.name;
                     this.control_mode = data.controlMode;
                     this.facemask_model = data.facemaskModel;
-                    this.recognition_distance = data.recognitionDistanc;
+                    this.recognition_distance = "" + data.recognitionDistanc;
                     this.similarity_threshold = data.similarityThreshold;
                     this.temperature_mode = data.temperatureMode;
                     this.temperature_compensation =
@@ -227,7 +227,7 @@ export default {
                     this.voice_broadcast = data.voiceBroadcast;
                     this.fill_light = data.fillLight;
                     this.volume = data.volume;
-                    this.feature_mode = data.featureMode;
+                    this.feature_mode = "" + data.featureMode;
                 }
             });
         },
@@ -237,7 +237,7 @@ export default {
                 name: this.name,
                 control_mode: this.control_mode,
                 facemask_model: this.facemask_model,
-                recognition_distance: this.recognition_distance,
+                recognition_distance: parseFloat(this.recognition_distance),
                 similarity_threshold: this.similarity_threshold,
                 temperature_mode: this.temperature_mode,
                 temperature_compensation: this.temperature_compensation,
@@ -245,7 +245,7 @@ export default {
                 voice_broadcast: this.voice_broadcast,
                 fill_light: this.fill_light,
                 volume: this.volume,
-                feature_mode: this.feature_mode,
+                feature_mode: ~~this.feature_mode,
                 mac_address: "",
             };
             post(

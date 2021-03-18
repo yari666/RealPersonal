@@ -39,11 +39,7 @@
                 label="总人数(人)"
             >
             </el-table-column>
-            <el-table-column
-                prop="totalDuration"
-                align="center"
-                label="时长总计(小时)"
-            >
+            <el-table-column prop="duration" align="center" label="时长总计">
             </el-table-column>
             <el-table-column
                 prop="totalDay"

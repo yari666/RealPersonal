@@ -615,6 +615,8 @@ export default {
         },
         getImg(e) {
             this.userInfo.currentPhoto64 = e.imgSrc.split(",")[1];
+            this.showCarm = false;
+            this.showUpload = false;
         },
 
         getFile(file, fileList) {

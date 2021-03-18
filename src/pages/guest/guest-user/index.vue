@@ -138,7 +138,6 @@
             :close-on-click-modal="false"
             :title="openType == 'add' ? '新增访客' : '编辑访客'"
             :visible.sync="showAdd"
-            v-if="showAdd"
             width="70%"
         >
             <add

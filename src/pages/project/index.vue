@@ -214,7 +214,7 @@ export default {
     },
     computed: {
         isAdd() {
-            return this.$store.state.isAdd;
+            return JSON.parse(this.$store.state.isAdd);
         },
     },
     methods: {
