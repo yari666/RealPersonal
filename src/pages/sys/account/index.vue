@@ -45,7 +45,7 @@
                 </template>
             </el-table-column>
 
-            <el-table-column prop="address" label="操作" width="180px">
+            <el-table-column prop="address" label="操作" width="260px">
                 <template slot-scope="scope">
                     <el-button
                         type="primary"
@@ -53,6 +53,8 @@
                         @click="editClass(scope.row)"
                         >编辑</el-button
                     >
+                    <el-button type="warning" size="small">分配项目</el-button>
+
                     <el-button
                         type="danger"
                         size="small"
