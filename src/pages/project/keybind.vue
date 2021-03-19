@@ -6,6 +6,8 @@
         ref="form"
         label-width="100px"
         class="keybind"
+        @keyup.enter.native="onSubmit('form')"
+        @click.native.prevent
     >
         <el-form-item label="指纹密钥" prop="key">
             <el-input v-model="form.key" maxlength="50"></el-input>
@@ -36,6 +38,7 @@ import { put } from "~/config/fetch.js";
 export default {
     data() {
         return {
+            loading: false,
             form: {
                 key: "",
             },
@@ -65,18 +68,23 @@ export default {
         onSubmit(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
+                    this.loading = true;
                     put(`/api/realname/project/project-finger-print`, {
                         projectid: this.currentId,
                         fingerprint: this.form.key,
-                    }).then((res) => {
-                        if (res.isSuccess) {
-                            this.$message({
-                                message: "提交成功！",
-                                type: "success",
-                            });
-                            this.$emit("ok");
-                        }
-                    });
+                    })
+                        .then((res) => {
+                            if (res.isSuccess) {
+                                this.$message({
+                                    message: "提交成功！",
+                                    type: "success",
+                                });
+                                this.$emit("ok");
+                            }
+                        })
+                        .catch((err) => {
+                            this.loading = false;
+                        });
                 } else {
                     console.log("error submit!!");
                     return false;

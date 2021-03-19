@@ -14,19 +14,19 @@
             :inline="true"
             :rules="rules"
             class="userDetail"
+            @keyup.enter.native="onSubmit('form')"
+            @click.native.prevent
         >
             <el-form-item label="姓名" prop="employeeName">
                 <el-input
                     v-model="userInfo.employeeName"
                     :readonly="readOnly"
-                    @keyup.enter.native="onSubmit('form')"
                 ></el-input>
             </el-form-item>
             <el-form-item label="工号">
                 <el-input
                     v-model="userInfo.workNumber"
                     :readonly="readOnly"
-                    @keyup.enter.native="onSubmit('form')"
                 ></el-input>
             </el-form-item>
 
@@ -34,7 +34,6 @@
                 <el-input
                     v-model="userInfo.national"
                     :readonly="readOnly"
-                    @keyup.enter.native="onSubmit('form')"
                 ></el-input>
             </el-form-item>
             <el-form-item label="性别">
@@ -47,14 +46,12 @@
                 <el-input
                     v-model="userInfo.idNumber"
                     :readonly="readOnly"
-                    @keyup.enter.native="onSubmit('form')"
                 ></el-input>
             </el-form-item>
             <el-form-item label="住址">
                 <el-input
                     v-model="userInfo.address"
                     :readonly="readOnly"
-                    @keyup.enter.native="onSubmit('form')"
                 ></el-input>
             </el-form-item>
             <el-form-item label="出生年月">
@@ -80,7 +77,6 @@
                 <el-input
                     v-model="userInfo.licenseIssuingAuthority"
                     :readonly="readOnly"
-                    @keyup.enter.native="onSubmit('form')"
                 ></el-input>
             </el-form-item>
             <el-form-item label="身份证有效止日期">
@@ -97,28 +93,24 @@
                 <el-input
                     v-model="userInfo.province"
                     :readonly="readOnly"
-                    @keyup.enter.native="onSubmit('form')"
                 ></el-input>
             </el-form-item>
             <el-form-item label="所属城市">
                 <el-input
                     v-model="userInfo.city"
                     :readonly="readOnly"
-                    @keyup.enter.native="onSubmit('form')"
                 ></el-input>
             </el-form-item>
             <el-form-item label="所属区县">
                 <el-input
                     v-model="userInfo.township"
                     :readonly="readOnly"
-                    @keyup.enter.native="onSubmit('form')"
                 ></el-input>
             </el-form-item>
             <el-form-item label="联系电话" prop="phoneNumber">
                 <el-input
                     v-model="userInfo.phoneNumber"
                     :readonly="readOnly"
-                    @keyup.enter.native="onSubmit('form')"
                 ></el-input>
             </el-form-item>
 
@@ -148,7 +140,6 @@
                 <el-input
                     v-model="userInfo.companyName"
                     :readonly="readOnly"
-                    @keyup.enter.native="onSubmit('form')"
                 ></el-input>
             </el-form-item>
 
@@ -265,7 +256,7 @@
             <el-button
                 type="primary"
                 @click="onSubmit('form')"
-                @keyup.enter.native="onSubmit('form')"
+                :loading="loading"
                 >确定</el-button
             >
             <el-button @click="cancel">取消</el-button>
@@ -315,6 +306,7 @@ export default {
             }, 0);
         };
         return {
+            loading: false,
             value: 0,
             readOnly: true, //只读
             showCarm: false,
@@ -441,6 +433,7 @@ export default {
 
             this.$refs[formName].validate((valid) => {
                 if (valid) {
+                    this.loading = true;
                     if (_this.userInfo.scheduleStartDate) {
                         _this.userInfo.scheduleStartDate = timestamp(
                             "YYYY-MM-DD HH:mm:ss",
@@ -475,8 +468,8 @@ export default {
                     _this.userInfo.currentPhoto = null;
 
                     if (_this.openType == "add") {
-                        post(`/api/realname/employee`, _this.userInfo).then(
-                            (res) => {
+                        post(`/api/realname/employee`, _this.userInfo)
+                            .then((res) => {
                                 if (res.isSuccess) {
                                     if (res.isSuccess) {
                                         this.$message({
@@ -487,24 +480,30 @@ export default {
                                         _this.$emit("ok");
                                     }
                                 }
-                            }
-                        );
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     } else {
                         put(
                             `/api/realname/employee/${_this.employeeId}`,
                             _this.userInfo
-                        ).then((res) => {
-                            if (res.isSuccess) {
+                        )
+                            .then((res) => {
                                 if (res.isSuccess) {
-                                    this.$message({
-                                        message: "修改成功！",
-                                        type: "success",
-                                    });
+                                    if (res.isSuccess) {
+                                        this.$message({
+                                            message: "修改成功！",
+                                            type: "success",
+                                        });
 
-                                    _this.$emit("ok");
+                                        _this.$emit("ok");
+                                    }
                                 }
-                            }
-                        });
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     }
                 } else {
                     console.log("error submit!!");

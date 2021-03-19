@@ -1,5 +1,12 @@
 <template>
-    <el-form ref="form" :model="form" label-width="80px" :rules="rules">
+    <el-form
+        ref="form"
+        :model="form"
+        label-width="80px"
+        :rules="rules"
+        @keyup.enter.native="onSubmit('form')"
+        @click.native.prevent
+    >
         <el-form-item label="班组编号" prop="visitorTeamCode">
             <el-input
                 v-model="form.visitorTeamCode"
@@ -31,7 +38,7 @@
             <el-button
                 type="primary"
                 @click="onSubmit('form')"
-                @keyup.enter.native="onSubmit('form')"
+                :loading="loading"
                 >确定</el-button
             >
             <el-button @click="cancel">取消</el-button>
@@ -45,6 +52,7 @@ import { post, put, get } from "~/config/fetch.js";
 export default {
     data() {
         return {
+            loading: false,
             form: {
                 visitorTeamCode: "",
                 visitorTeamName: "",
@@ -66,13 +74,6 @@ export default {
                         trigger: "blur",
                     },
                 ],
-                // companyId: [
-                //     {
-                //         required: true,
-                //         message: "请选择所属企业",
-                //         trigger: "blur",
-                //     },
-                // ],
             },
         };
     },
@@ -106,10 +107,11 @@ export default {
             let _this = this;
             this.$refs[form].validate((valid) => {
                 if (valid) {
+                    this.loading = true;
                     if (this.openType == "add") {
                         // 新增
-                        post(`/api/realname/visitor-team`, _this.form).then(
-                            (res) => {
+                        post(`/api/realname/visitor-team`, _this.form)
+                            .then((res) => {
                                 if (res.isSuccess) {
                                     this.$message({
                                         message: "新增成功！",
@@ -117,22 +119,28 @@ export default {
                                     });
                                     _this.$emit("ok");
                                 }
-                            }
-                        );
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     } else if (this.openType == "edit") {
                         // 修改
                         put(
                             `/api/realname/visitor-team/${this.currentTeam.id}`,
                             _this.form
-                        ).then((res) => {
-                            if (res.isSuccess) {
-                                this.$message({
-                                    message: "修改成功！",
-                                    type: "success",
-                                });
-                                _this.$emit("ok");
-                            }
-                        });
+                        )
+                            .then((res) => {
+                                if (res.isSuccess) {
+                                    this.$message({
+                                        message: "修改成功！",
+                                        type: "success",
+                                    });
+                                    _this.$emit("ok");
+                                }
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     }
                 } else {
                     console.log("error submit!!");

@@ -1,5 +1,10 @@
 <template>
-    <el-form ref="form" label-width="140px">
+    <el-form
+        ref="form"
+        label-width="140px"
+        @keyup.enter.native="onSubmit"
+        @click.native.prevent
+    >
         <el-form-item label="设备名称">
             <el-input v-model="name" style="width: 80%"></el-input>
         </el-form-item>
@@ -43,11 +48,11 @@
         </el-form-item>
 
         <el-form-item label="识别距离（米）">
-            <el-radio-group v-model="recognition_distance">
+            <el-radio-group v-model="recognition_distanc">
                 <el-radio label="0.5">0.5米以内</el-radio>
-                <el-radio label="1.0">1米以内</el-radio>
+                <el-radio label="1">1米以内</el-radio>
                 <el-radio label="1.5">1.5米以内（默认）</el-radio>
-                <el-radio label="2.0">2米以内</el-radio>
+                <el-radio label="2">2米以内</el-radio>
             </el-radio-group>
         </el-form-item>
 
@@ -120,7 +125,9 @@
             </el-radio-group>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="onSubmit()">确定</el-button>
+            <el-button type="primary" @click="onSubmit" :loading="loading"
+                >确定</el-button
+            >
             <el-button @click="cancel">取消</el-button>
         </el-form-item>
     </el-form>
@@ -144,12 +151,13 @@ export default {
     data() {
         return {
             projectData: [],
+            loading: false,
 
             company: "",
             name: "",
             control_mode: "relay",
             facemask_model: true,
-            recognition_distance: "1.5",
+            recognition_distanc: "1.5",
             similarity_threshold: 80,
             temperature_mode: "Celsius",
             temperature_compensation: 0,
@@ -218,7 +226,7 @@ export default {
                     this.name = data.name;
                     this.control_mode = data.controlMode;
                     this.facemask_model = data.facemaskModel;
-                    this.recognition_distance = "" + data.recognitionDistanc;
+                    this.recognition_distanc = "" + data.recognitionDistanc;
                     this.similarity_threshold = data.similarityThreshold;
                     this.temperature_mode = data.temperatureMode;
                     this.temperature_compensation =
@@ -232,12 +240,13 @@ export default {
             });
         },
         onSubmit() {
+            this.loading = true;
             let param = {
                 company: this.company,
                 name: this.name,
                 control_mode: this.control_mode,
                 facemask_model: this.facemask_model,
-                recognition_distance: parseFloat(this.recognition_distance),
+                recognition_distanc: parseFloat(this.recognition_distanc),
                 similarity_threshold: this.similarity_threshold,
                 temperature_mode: this.temperature_mode,
                 temperature_compensation: this.temperature_compensation,
@@ -251,15 +260,19 @@ export default {
             post(
                 `/api/realname/device/deivce-config/${this.currentItem.id}`,
                 param
-            ).then((res) => {
-                if (res.isSuccess) {
-                    this.$message({
-                        message: "新增成功！",
-                        type: "success",
-                    });
-                    this.$emit("ok");
-                }
-            });
+            )
+                .then((res) => {
+                    if (res.isSuccess) {
+                        this.$message({
+                            message: "新增成功！",
+                            type: "success",
+                        });
+                        this.$emit("ok");
+                    }
+                })
+                .catch((err) => {
+                    this.loading = false;
+                });
         },
 
         // 项目下拉

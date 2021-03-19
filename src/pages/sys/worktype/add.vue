@@ -1,5 +1,12 @@
 <template>
-    <el-form ref="form" :model="form" label-width="80px" :rules="rules">
+    <el-form
+        ref="form"
+        :model="form"
+        label-width="80px"
+        :rules="rules"
+        @keyup.enter.native="onSubmit('form')"
+        @click.native.prevent
+    >
         <el-form-item label="编号" prop="dicCode">
             <el-input v-model="form.dicCode"></el-input>
         </el-form-item>
@@ -16,7 +23,12 @@
             <el-switch v-model="form.isActive"> </el-switch>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="onSubmit('form')">确定</el-button>
+            <el-button
+                type="primary"
+                @click="onSubmit('form')"
+                :loading="loading"
+                >确定</el-button
+            >
             <el-button @click="cancel">取消</el-button>
         </el-form-item>
     </el-form>
@@ -27,6 +39,7 @@ import { post, put } from "~/config/fetch.js";
 export default {
     data() {
         return {
+            loading: false,
             form: {
                 dicCode: "",
                 dicName: "",
@@ -71,12 +84,14 @@ export default {
     methods: {
         onSubmit(formName) {
             let _this = this;
+
             this.$refs[formName].validate((valid) => {
                 if (valid) {
+                    this.loading = true;
                     if (_this.openType == "add") {
                         // 新增
-                        post(`/api/realname/dictionary`, _this.form).then(
-                            (res) => {
+                        post(`/api/realname/dictionary`, _this.form)
+                            .then((res) => {
                                 if (res.isSuccess) {
                                     _this.$message({
                                         message: "新增成功！",
@@ -84,22 +99,28 @@ export default {
                                     });
                                     this.$emit("ok");
                                 }
-                            }
-                        );
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     } else {
                         // 编辑
                         put(
                             `/api/realname/dictionary/${_this.currentItem.id}`,
                             _this.form
-                        ).then((res) => {
-                            if (res.isSuccess) {
-                                _this.$message({
-                                    message: "修改成功！",
-                                    type: "success",
-                                });
-                                this.$emit("ok");
-                            }
-                        });
+                        )
+                            .then((res) => {
+                                if (res.isSuccess) {
+                                    _this.$message({
+                                        message: "修改成功！",
+                                        type: "success",
+                                    });
+                                    this.$emit("ok");
+                                }
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     }
                 } else {
                     console.log("error submit!!");

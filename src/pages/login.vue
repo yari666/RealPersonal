@@ -14,6 +14,7 @@
                     :rules="rules"
                     ref="ruleForm"
                     class="ruleForm"
+                    @keyup.enter.native="submitForm('ruleForm')"
                 >
                     <el-form-item prop="userName">
                         <el-input
@@ -34,7 +35,6 @@
                             v-model="ruleForm.pass"
                             autocomplete="off"
                             prefix-icon="el-icon-lock"
-                            @keyup.enter.native="submitForm('ruleForm')"
                         >
                         </el-input>
                     </el-form-item>
@@ -42,9 +42,9 @@
                         <el-button
                             class="loginbtn"
                             type="primary"
-                            @keyup.enter.native="submitForm('ruleForm')"
                             @click="submitForm('ruleForm')"
                             :loading="loading"
+                            native-type="submit"
                             >登&nbsp;&nbsp;&nbsp;录</el-button
                         >
                     </el-form-item>
@@ -120,7 +120,6 @@ export default {
                                     userName: res.data.userName,
                                     isAdd: res.data.isAdd,
                                 });
-                                this.loading = false;
 
                                 let hostName = this.$route.query.redirect;
                                 if (hostName) {

@@ -1,16 +1,17 @@
 <template>
-    <el-form ref="form" :model="form" :rules="rules" label-width="140px">
+    <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="140px"
+        @keyup.enter.native="onSubmit('form')"
+        @click.native.prevent
+    >
         <el-form-item label="设备名称" prop="deviceName">
-            <el-input
-                v-model="form.deviceName"
-                @keyup.enter.native="onSubmit('form')"
-            ></el-input>
+            <el-input v-model="form.deviceName"></el-input>
         </el-form-item>
         <el-form-item label="设备MAC地址" prop="deviceMacAddress">
-            <el-input
-                v-model="form.deviceMacAddress"
-                @keyup.enter.native="onSubmit('form')"
-            ></el-input>
+            <el-input v-model="form.deviceMacAddress"></el-input>
         </el-form-item>
         <el-form-item label="进出标识" prop="deviceStatus">
             <el-select
@@ -26,20 +27,6 @@
                 ></el-option>
             </el-select>
         </el-form-item>
-        <!-- <el-form-item label="设备来源" prop="deviceSource">
-            <el-select
-                placeholder="请选择设备来源"
-                v-model="form.deviceSource"
-                style="width: 100%"
-            >
-                <el-option
-                    v-for="item in resourceData"
-                    :key="item.key"
-                    :label="item.value"
-                    :value="item.key"
-                ></el-option>
-            </el-select>
-        </el-form-item> -->
         <el-form-item label="所属项目">
             <el-select
                 placeholder="请选择所属项目"
@@ -58,7 +45,7 @@
             <el-button
                 type="primary"
                 @click="onSubmit('form')"
-                @keyup.enter.native="onSubmit('form')"
+                :loading="loading"
                 >确定</el-button
             >
             <el-button @click="cancel">取消</el-button>
@@ -72,6 +59,7 @@ import { get, post, put } from "~/config/fetch.js";
 export default {
     data() {
         return {
+            loading: false,
             form: {
                 deviceName: "",
                 deviceMacAddress: "",
@@ -132,31 +120,40 @@ export default {
             let _this = this;
             this.$refs[formName].validate((valid) => {
                 if (valid) {
+                    this.loading = true;
                     if (this.openType == "add") {
                         // 新增
-                        post(`/api/realname/device`, _this.form).then((res) => {
-                            if (res.isSuccess) {
-                                this.$message({
-                                    message: "新增成功！",
-                                    type: "success",
-                                });
-                                this.$emit("ok");
-                            }
-                        });
+                        post(`/api/realname/device`, _this.form)
+                            .then((res) => {
+                                if (res.isSuccess) {
+                                    this.$message({
+                                        message: "新增成功！",
+                                        type: "success",
+                                    });
+                                    this.$emit("ok");
+                                }
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     } else if (this.openType == "edit") {
                         // 修改
                         put(
                             `/api/realname/device/${_this.currentItem.id}`,
                             this.form
-                        ).then((res) => {
-                            if (res.isSuccess) {
-                                this.$message({
-                                    message: "修改成功！",
-                                    type: "success",
-                                });
-                                this.$emit("ok");
-                            }
-                        });
+                        )
+                            .then((res) => {
+                                if (res.isSuccess) {
+                                    this.$message({
+                                        message: "修改成功！",
+                                        type: "success",
+                                    });
+                                    this.$emit("ok");
+                                }
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     }
                 } else {
                     console.log("error submit!!");

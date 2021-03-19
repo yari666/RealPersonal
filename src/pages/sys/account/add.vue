@@ -1,28 +1,23 @@
 <template>
-    <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+    <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="100px"
+        @keyup.enter.native="onSubmit('form')"
+        @click.native.prevent
+    >
         <el-form-item label="用户名" prop="userName">
-            <el-input
-                v-model="form.userName"
-                @keyup.enter.native="onSubmit('form')"
-            ></el-input>
+            <el-input v-model="form.userName"></el-input>
         </el-form-item>
         <el-form-item label="姓名" prop="name">
-            <el-input
-                v-model="form.name"
-                @keyup.enter.native="onSubmit('form')"
-            ></el-input>
+            <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="联系方式" prop="phoneNumber">
-            <el-input
-                v-model="form.phoneNumber"
-                @keyup.enter.native="onSubmit('form')"
-            ></el-input>
+            <el-input v-model="form.phoneNumber"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-            <el-input
-                v-model="form.email"
-                @keyup.enter.native="onSubmit('form')"
-            ></el-input>
+            <el-input v-model="form.email"></el-input>
         </el-form-item>
         <el-form-item label="角色" prop="roleId">
             <el-select
@@ -86,12 +81,7 @@
         </el-form-item>
 
         <el-form-item>
-            <el-button
-                type="primary"
-                @click="onSubmit('form')"
-                @keyup.enter.native="onSubmit('form')"
-                >确定</el-button
-            >
+            <el-button type="primary" @click="onSubmit('form')">确定</el-button>
             <el-button @click="cancel">取消</el-button>
         </el-form-item>
     </el-form>
@@ -105,6 +95,7 @@ const timestamp = require("time-stamp");
 export default {
     data() {
         return {
+            loading: false,
             form: {
                 email: "",
                 expirationDate: "",
@@ -231,6 +222,7 @@ export default {
             let _this = this;
             this.$refs[formName].validate((valid) => {
                 if (valid) {
+                    this.loading = true;
                     let param = {
                         email: _this.form.email,
                         userName: _this.form.userName,
@@ -255,29 +247,34 @@ export default {
                     };
                     if (_this.openType == "add") {
                         // 新增
-                        post(`/api/realname/user`, param).then((res) => {
-                            if (res.isSuccess) {
-                                _this.$message({
-                                    message: "新增成功！",
-                                    type: "success",
-                                });
-                                this.$emit("ok");
-                            }
-                        });
+                        post(`/api/realname/user`, param)
+                            .then((res) => {
+                                if (res.isSuccess) {
+                                    _this.$message({
+                                        message: "新增成功！",
+                                        type: "success",
+                                    });
+                                    this.$emit("ok");
+                                }
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     } else {
                         // 编辑
-                        put(
-                            `/api/realname/user/${_this.currentItem.id}`,
-                            param
-                        ).then((res) => {
-                            if (res.isSuccess) {
-                                _this.$message({
-                                    message: "修改成功！",
-                                    type: "success",
-                                });
-                                this.$emit("ok");
-                            }
-                        });
+                        put(`/api/realname/user/${_this.currentItem.id}`, param)
+                            .then((res) => {
+                                if (res.isSuccess) {
+                                    _this.$message({
+                                        message: "修改成功！",
+                                        type: "success",
+                                    });
+                                    this.$emit("ok");
+                                }
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     }
                 } else {
                     console.log("error submit!!");

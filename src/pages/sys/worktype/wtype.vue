@@ -154,9 +154,9 @@ export default {
             this.getData();
         },
         closeOk() {
-            this.getData();
             this.showAdd = false;
             this.showRelation = false;
+            this.getData();
         },
         closeCancel() {
             this.showAdd = false;

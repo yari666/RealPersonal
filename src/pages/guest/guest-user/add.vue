@@ -1,5 +1,12 @@
 <template>
-    <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+    <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="120px"
+        @keyup.enter.native="onSubmit('form')"
+        @click.native.prevent
+    >
         <el-form-item label="工号">
             <el-input v-model="form.workNumber"></el-input>
         </el-form-item>
@@ -59,7 +66,12 @@
             <el-input v-model="form.teamName"></el-input>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="onSubmit('form')">确定</el-button>
+            <el-button
+                type="primary"
+                @click="onSubmit('form')"
+                :loading="loading"
+                >确定</el-button
+            >
             <el-button>取消</el-button>
         </el-form-item>
     </el-form>
@@ -72,6 +84,7 @@ const timestamp = require("time-stamp");
 export default {
     data() {
         return {
+            loading: false,
             form: {
                 workNumber: "",
                 employeeName: "",
@@ -115,6 +128,7 @@ export default {
 
             this.$refs[formName].validate((valid) => {
                 if (valid) {
+                    this.loading = true;
                     let param = {
                         workNumber: _this.currentItem.workNumber,
                         employeeName: _this.currentItem.employeeName,
@@ -138,29 +152,37 @@ export default {
 
                     // 新增
                     if (this.openType == "add") {
-                        post(`/api/realname/employee`, param).then((res) => {
-                            if (res.isSuccess) {
-                                this.$message({
-                                    message: "新增成功！",
-                                    type: "success",
-                                });
-                                this.$emit("ok");
-                            }
-                        });
+                        post(`/api/realname/employee`, param)
+                            .then((res) => {
+                                if (res.isSuccess) {
+                                    this.$message({
+                                        message: "新增成功！",
+                                        type: "success",
+                                    });
+                                    this.$emit("ok");
+                                }
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     } else if (this.openType == "edit") {
                         // 修改
                         put(
                             `/api/realname/employee/${_this.currentItem.id}`,
                             param
-                        ).then((res) => {
-                            if (res.isSuccess) {
-                                this.$message({
-                                    message: "修改成功！",
-                                    type: "success",
-                                });
-                                this.$emit("ok");
-                            }
-                        });
+                        )
+                            .then((res) => {
+                                if (res.isSuccess) {
+                                    this.$message({
+                                        message: "修改成功！",
+                                        type: "success",
+                                    });
+                                    this.$emit("ok");
+                                }
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     }
                 } else {
                     console.log("error submit!!");

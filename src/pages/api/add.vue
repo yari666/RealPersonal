@@ -1,5 +1,11 @@
 <template>
-    <el-form ref="form" :model="param" label-width="160px">
+    <el-form
+        ref="form"
+        :model="param"
+        label-width="160px"
+        @keyup.enter.native="onSubmit"
+        @click.native.prevent
+    >
         <el-form-item label="所属平台">
             <el-input v-model="param.platform"></el-input>
         </el-form-item>

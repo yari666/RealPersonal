@@ -1,16 +1,17 @@
 <template>
-    <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+    <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="100px"
+        @keyup.enter.native="onSubmit('form')"
+        @click.native.prevent
+    >
         <el-form-item label="角色编号">
-            <el-input
-                v-model="form.roleCode"
-                @keyup.enter.native="onSubmit('form')"
-            ></el-input>
+            <el-input v-model="form.roleCode"></el-input>
         </el-form-item>
         <el-form-item label="角色名称" prop="roleName">
-            <el-input
-                v-model="form.roleName"
-                @keyup.enter.native="onSubmit('form')"
-            ></el-input>
+            <el-input v-model="form.roleName"></el-input>
         </el-form-item>
         <el-form-item label="是否激活">
             <el-switch
@@ -27,7 +28,7 @@
             <el-button
                 type="primary"
                 @click="onSubmit('form')"
-                @keyup.enter.native="onSubmit('form')"
+                :loading="loading"
                 >确定</el-button
             >
             <el-button @click="cancel">取消</el-button>
@@ -40,6 +41,7 @@ import { post, put } from "~/config/fetch.js";
 export default {
     data() {
         return {
+            loading: false,
             form: {
                 isActive: true,
                 remark: "",
@@ -82,31 +84,40 @@ export default {
             let _this = this;
             this.$refs[formName].validate((valid) => {
                 if (valid) {
+                    this.loading = true;
                     if (_this.openType == "add") {
                         // 新增
-                        post(`/api/realname/role`, _this.form).then((res) => {
-                            if (res.isSuccess) {
-                                _this.$message({
-                                    message: "新增成功！",
-                                    type: "success",
-                                });
-                                this.$emit("ok");
-                            }
-                        });
+                        post(`/api/realname/role`, _this.form)
+                            .then((res) => {
+                                if (res.isSuccess) {
+                                    _this.$message({
+                                        message: "新增成功！",
+                                        type: "success",
+                                    });
+                                    this.$emit("ok");
+                                }
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     } else {
                         // 编辑
                         put(
                             `/api/realname/role/${_this.currentItem.id}`,
                             _this.form
-                        ).then((res) => {
-                            if (res.isSuccess) {
-                                _this.$message({
-                                    message: "修改成功！",
-                                    type: "success",
-                                });
-                                this.$emit("ok");
-                            }
-                        });
+                        )
+                            .then((res) => {
+                                if (res.isSuccess) {
+                                    _this.$message({
+                                        message: "修改成功！",
+                                        type: "success",
+                                    });
+                                    this.$emit("ok");
+                                }
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     }
                 } else {
                     console.log("error submit!!");

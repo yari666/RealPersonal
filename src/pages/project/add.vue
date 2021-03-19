@@ -1,5 +1,12 @@
 <template>
-    <el-form ref="form" :model="form" :rules="rules" label-width="160px">
+    <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="160px"
+        @keyup.enter.native="onSubmit('form')"
+        @click.native.prevent
+    >
         <el-form-item label="项目名称" prop="projectName">
             <el-input
                 v-model="form.projectName"
@@ -77,7 +84,7 @@
             <el-button
                 type="primary"
                 @click="onSubmit('form')"
-                @keyup.enter.native="onSubmit('form')"
+                :loading="loading"
                 >确定</el-button
             >
             <el-button @click="cancel">取消</el-button>
@@ -91,6 +98,7 @@ import { get, post, put } from "~/config/fetch.js";
 export default {
     data() {
         return {
+            loading: false,
             form: {
                 address: null,
                 city: null,
@@ -149,33 +157,42 @@ export default {
 
             this.$refs[formName].validate((valid) => {
                 if (valid) {
+                    this.loading = true;
                     if (this.openType == "add") {
                         // 新增
                         post(`/api/realname/project/project`, {
                             projectName: _this.form.projectName,
-                        }).then((res) => {
-                            if (res.isSuccess) {
-                                this.$message({
-                                    message: "新增成功！",
-                                    type: "success",
-                                });
-                                this.$emit("ok");
-                            }
-                        });
+                        })
+                            .then((res) => {
+                                if (res.isSuccess) {
+                                    this.$message({
+                                        message: "新增成功！",
+                                        type: "success",
+                                    });
+                                    this.$emit("ok");
+                                }
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     } else {
                         // 编辑
                         put(
                             `/api/realname/project/${this.currentItem.id}`,
                             this.form
-                        ).then((res) => {
-                            if (res.isSuccess) {
-                                this.$message({
-                                    message: "修改成功！",
-                                    type: "success",
-                                });
-                                this.$emit("ok");
-                            }
-                        });
+                        )
+                            .then((res) => {
+                                if (res.isSuccess) {
+                                    this.$message({
+                                        message: "修改成功！",
+                                        type: "success",
+                                    });
+                                    this.$emit("ok");
+                                }
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     }
                 } else {
                     console.log("error submit!!");

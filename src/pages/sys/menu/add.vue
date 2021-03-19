@@ -1,5 +1,12 @@
 <template>
-    <el-form ref="form" :model="form" label-width="100px" :rules="rules">
+    <el-form
+        ref="form"
+        :model="form"
+        label-width="100px"
+        :rules="rules"
+        @keyup.enter.native="onSubmit('form')"
+        @click.native.prevent
+    >
         <el-form-item label="菜单编号" prop="menuCode">
             <el-input v-model="form.menuCode"></el-input>
         </el-form-item>
@@ -39,7 +46,12 @@
             </el-switch>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="onSubmit('form')">确定</el-button>
+            <el-button
+                type="primary"
+                @click="onSubmit('form')"
+                :loading="loading"
+                >确定</el-button
+            >
             <el-button @click="cancel">取消</el-button>
         </el-form-item>
     </el-form>
@@ -51,6 +63,7 @@ import { get, post, put } from "~/config/fetch.js";
 export default {
     data() {
         return {
+            loading: false,
             form: {
                 menuCode: "",
                 menuName: "",
@@ -114,40 +127,40 @@ export default {
             let _this = this;
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    // let param = {
-                    //     menuCode: _this.form.menuCode,
-                    //     menuName: _this.form.menuName,
-                    //     menuParentId: _this.form.menuParentId,
-                    //     menuUrl: _this.form.menuUrl,
-                    //     menuIcon: _this.form.menuIcon,
-                    //     isActive: _this.form.isActive,
-                    //     sortNumb: _this.form.sortNumb,
-                    // };
+                    this.loading = true;
                     if (_this.openType == "add") {
                         // 新增
-                        post(`/api/realname/menu`, _this.form).then((res) => {
-                            if (res.isSuccess) {
-                                _this.$message({
-                                    message: "新增成功！",
-                                    type: "success",
-                                });
-                                this.$emit("ok");
-                            }
-                        });
+                        post(`/api/realname/menu`, _this.form)
+                            .then((res) => {
+                                if (res.isSuccess) {
+                                    _this.$message({
+                                        message: "新增成功！",
+                                        type: "success",
+                                    });
+                                    this.$emit("ok");
+                                }
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     } else {
                         // 编辑
                         put(
                             `/api/realname/menu/${_this.currentItem.id}`,
                             _this.form
-                        ).then((res) => {
-                            if (res.isSuccess) {
-                                _this.$message({
-                                    message: "修改成功！",
-                                    type: "success",
-                                });
-                                this.$emit("ok");
-                            }
-                        });
+                        )
+                            .then((res) => {
+                                if (res.isSuccess) {
+                                    _this.$message({
+                                        message: "修改成功！",
+                                        type: "success",
+                                    });
+                                    this.$emit("ok");
+                                }
+                            })
+                            .catch((err) => {
+                                this.loading = false;
+                            });
                     }
                 } else {
                     console.log("error submit!!");
