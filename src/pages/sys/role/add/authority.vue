@@ -129,13 +129,12 @@ export default {
             this.checkedIndex = arr;
         },
         onSubmit() {
-            // console.log(this.$refs.trees.getCheckedKeys());
-            // console.log(this.$refs.trees.getHalfCheckedKeys());
-            let checkKey = Object.assign(
-                this.checkData,
-                this.$refs.trees.getCheckedKeys(),
-                this.$refs.trees.getHalfCheckedKeys()
-            );
+            let check = this.$refs.trees.getCheckedKeys();
+            let checkHalfKey = this.$refs.trees.getHalfCheckedKeys();
+            console.log(check);
+            console.log(checkHalfKey);
+
+            let checkKey = check.concat(checkHalfKey);
             let param = {
                 roleCode: this.currentItem.roleCode,
                 roleName: this.currentItem.roleName,
