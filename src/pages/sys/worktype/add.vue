@@ -46,7 +46,6 @@ export default {
                 groupName: "",
                 parentDicId: "",
                 isActive: true,
-                id: "",
             },
             rules: {
                 dicCode: [
@@ -89,8 +88,14 @@ export default {
                 if (valid) {
                     this.loading = true;
                     if (_this.openType == "add") {
+                        let param = _this.form;
+                        delete param.id;
+
+                        if (!_this.form.parentDicId) {
+                            _this.form.parentDicId = undefined;
+                        }
                         // 新增
-                        post(`/api/realname/dictionary`, _this.form)
+                        post(`/api/realname/dictionary`, param)
                             .then((res) => {
                                 if (res.isSuccess) {
                                     _this.$message({

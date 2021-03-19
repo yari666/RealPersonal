@@ -45,7 +45,7 @@
                 </template>
             </el-table-column>
 
-            <el-table-column prop="address" label="操作" width="260px">
+            <el-table-column prop="address" label="操作" width="340px">
                 <template slot-scope="scope">
                     <el-button
                         type="primary"
@@ -53,7 +53,14 @@
                         @click="editClass(scope.row)"
                         >编辑</el-button
                     >
-                    <el-button type="warning" size="small">分配项目</el-button>
+                    <!-- <el-button type="warning" size="small">分配项目</el-button> -->
+
+                    <el-button
+                        type="primary"
+                        size="small"
+                        @click="resetPassword(scope.row.id)"
+                        >密码重置</el-button
+                    >
 
                     <el-button
                         type="danger"
@@ -94,7 +101,7 @@
 </template>
 
 <script>
-import { get, del } from "~/config/fetch.js";
+import { get, del, put } from "~/config/fetch.js";
 import add from "./add";
 const timestamp = require("time-stamp");
 
@@ -199,6 +206,31 @@ export default {
             this.openType = "edit";
             this.currentItem = item;
             this.showAdd = true;
+        },
+        resetPassword(id) {
+            this.$confirm("确认要重置密码？")
+                .then((_) => {
+                    put(`/api/realname/user/restore-user-password/${id}`).then(
+                        (res) => {
+                            console.log(res);
+                            if (res.data.resultStatus) {
+                                this.$message({
+                                    message:
+                                        "重置密码成功！新密码为该用户的手机号码",
+                                    type: "success",
+                                });
+                            } else {
+                                this.$message({
+                                    message: "重置密码失败！",
+                                    type: "error",
+                                });
+                            }
+                        }
+                    );
+                })
+                .catch((_) => {
+                    console.log(_);
+                });
         },
         delData(id) {
             this.$confirm("确认要删除？")

@@ -103,7 +103,7 @@ export default {
     methods: {
         getData() {
             get("/api/realname/menu/menu-list", {
-                UserId: this.userId,
+                UserId: 1,
             }).then((res) => {
                 if (res.isSuccess) {
                     this.menuIdList = res.data;

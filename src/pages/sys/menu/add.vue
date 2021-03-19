@@ -130,6 +130,10 @@ export default {
                     this.loading = true;
                     if (_this.openType == "add") {
                         // 新增
+
+                        if (!_this.form.menuParentId) {
+                            _this.form.menuParentId = undefined;
+                        }
                         post(`/api/realname/menu`, _this.form)
                             .then((res) => {
                                 if (res.isSuccess) {

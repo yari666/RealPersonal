@@ -157,9 +157,9 @@ export default {
             this.getData();
         },
         closeOk() {
-            this.getData();
             this.showAdd = false;
             this.showRelation = false;
+            this.getData();
         },
         closeCancel() {
             this.showAdd = false;
@@ -186,7 +186,7 @@ export default {
         delData(id) {
             this.$confirm("确认要删除？")
                 .then((_) => {
-                    del(`/api/realname/user/${id}`).then((res) => {
+                    del(`/api/realname/menu/${id}`).then((res) => {
                         if (res.isSuccess) {
                             this.$message({
                                 message: "删除成功！",
